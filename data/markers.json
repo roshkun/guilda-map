@@ -1,88 +1,1766 @@
 [
-  {
-    "id": "reino-aurea",
-    "category": "country",
-    "name": "Reino de Áurea",
-    "x": 800, "y": 780,
-    "description": "O maior reino do continente ocidental.",
-    "aliases": ["Aurea"],
-    "docs": [{ "title": "História de Áurea", "url": "docs/aurea.md" }],
-    "area": [[480,620],[720,480],[1050,560],[1150,850],[900,1100],[560,1000]]
-  },
-  {
-    "id": "imperio-valdor",
-    "category": "country",
-    "name": "Império de Valdor",
-    "x": 1500, "y": 680,
-    "description": "Potência militar do leste.",
-    "docs": [{ "title": "Linha do tempo do Império", "url": "docs/valdor.md" }]
-  },
-  {
-    "id": "ducado-serra",
-    "category": "duchy",
-    "name": "Ducado da Serra",
-    "x": 900, "y": 640,
-    "description": "Ducado montanhoso ao norte de Áurea, governado pela Casa Serrano.",
-    "docs": [{ "title": "Casa Serrano", "url": "docs/casa-serrano.md" }]
-  },
-  {
-    "id": "ducado-mar",
-    "category": "duchy",
-    "name": "Ducado do Mar Cinzento",
-    "x": 1300, "y": 1150,
-    "description": "Ducado costeiro, conhecido pelos portos.",
-    "docs": []
-  },
-  {
-    "id": "cidade-alvorada",
-    "category": "city",
-    "name": "Alvorada",
-    "x": 820, "y": 800,
-    "description": "Capital de Áurea.",
-    "aliases": ["Capital de Áurea"],
-    "docs": [
-      { "title": "Guia de Alvorada", "url": "docs/alvorada.md" },
-      { "title": "Mapa da cidade (PDF)", "url": "https://example.com/alvorada.pdf" }
-    ]
-  },
-  {
-    "id": "cidade-valdoria",
-    "category": "city",
-    "name": "Valdória",
-    "x": 1520, "y": 720,
-    "description": "Capital do Império de Valdor.",
-    "docs": []
-  },
-  {
-    "id": "vila-pedralta",
-    "category": "town",
-    "name": "Pedralta",
-    "x": 930, "y": 700,
-    "description": "Vila mineradora na Serra.",
-    "docs": []
-  },
-  {
-    "id": "vila-portonovo",
-    "category": "town",
-    "name": "Porto Novo",
-    "x": 1260, "y": 1200,
-    "description": "Principal porto do Mar Cinzento.",
-    "docs": []
-  },
-  {
-    "id": "poi-torre",
-    "category": "poi",
-    "name": "Torre do Vigia",
-    "x": 1050, "y": 560,
-    "description": "Ruína antiga com vista para toda a fronteira.",
-    "docs": [{ "title": "Lenda da Torre", "url": "docs/torre.md" }]
-  },
-  {
-    "id": "pin-acampamento",
-    "category": "pin",
-    "name": "Acampamento dos viajantes",
-    "x": 1180, "y": 900,
-    "description": "Anotação pessoal: onde o grupo parou na terceira sessão.",
-    "docs": []
-  }
+ {
+  "id": "city-abissala",
+  "category": "city",
+  "name": "Abissala",
+  "x": 4668,
+  "y": 4314,
+  "description": "",
+  "docs": []
+ },
+ {
+  "id": "city-aerandir",
+  "category": "city",
+  "name": "Aerandir",
+  "x": 4275,
+  "y": 4885,
+  "description": "",
+  "docs": []
+ },
+ {
+  "id": "city-ahlam-al-safra",
+  "category": "city",
+  "name": "Ahlam al-Safra",
+  "x": 2269,
+  "y": 1943,
+  "description": "",
+  "docs": []
+ },
+ {
+  "id": "capital-altamare",
+  "category": "capital",
+  "name": "Altamaré",
+  "x": 5745,
+  "y": 5062,
+  "description": "",
+  "docs": []
+ },
+ {
+  "id": "poi-altamira",
+  "category": "poi",
+  "name": "Altamira",
+  "x": 4261,
+  "y": 5371,
+  "description": "",
+  "docs": []
+ },
+ {
+  "id": "town-altarocha",
+  "category": "town",
+  "name": "Altarocha",
+  "x": 4554,
+  "y": 5026,
+  "description": "",
+  "docs": []
+ },
+ {
+  "id": "town-altencontro",
+  "category": "town",
+  "name": "Altencontro",
+  "x": 3860,
+  "y": 4102,
+  "description": "",
+  "docs": []
+ },
+ {
+  "id": "town-altescama",
+  "category": "town",
+  "name": "Altescama",
+  "x": 4798,
+  "y": 3287,
+  "description": "",
+  "docs": []
+ },
+ {
+  "id": "city-altimar",
+  "category": "city",
+  "name": "Altimar",
+  "x": 3827,
+  "y": 4843,
+  "description": "",
+  "docs": []
+ },
+ {
+  "id": "city-altoriva",
+  "category": "city",
+  "name": "Altoriva",
+  "x": 4143,
+  "y": 6023,
+  "description": "",
+  "docs": []
+ },
+ {
+  "id": "poi-areiescaldante",
+  "category": "poi",
+  "name": "Areiescaldante",
+  "x": 3736,
+  "y": 2607,
+  "description": "",
+  "docs": []
+ },
+ {
+  "id": "poi-arquipelago-das-conchas",
+  "category": "poi",
+  "name": "Arquipélago das Conchas",
+  "x": 5900,
+  "y": 6000,
+  "description": "",
+  "docs": []
+ },
+ {
+  "id": "town-arroio-da-fonte",
+  "category": "town",
+  "name": "Arroio da Fonte",
+  "x": 3355,
+  "y": 3971,
+  "description": "",
+  "docs": []
+ },
+ {
+  "id": "town-arvoredo",
+  "category": "town",
+  "name": "Arvoredo",
+  "x": 3167,
+  "y": 5018,
+  "description": "",
+  "docs": []
+ },
+ {
+  "id": "poi-arvralto",
+  "category": "poi",
+  "name": "Arvralto",
+  "x": 4012,
+  "y": 3945,
+  "description": "",
+  "docs": []
+ },
+ {
+  "id": "capital-aurelia-magna",
+  "category": "capital",
+  "name": "Aurelia Magna",
+  "x": 992,
+  "y": 5020,
+  "description": "",
+  "docs": []
+ },
+ {
+  "id": "capital-aurorium",
+  "category": "capital",
+  "name": "Aurorium",
+  "x": 3645,
+  "y": 3508,
+  "description": "",
+  "docs": []
+ },
+ {
+  "id": "capital-barcelaga",
+  "category": "capital",
+  "name": "Barcelaga",
+  "x": 7470,
+  "y": 2924,
+  "description": "",
+  "docs": []
+ },
+ {
+  "id": "poi-beira-vale",
+  "category": "poi",
+  "name": "Beira Vale",
+  "x": 4477,
+  "y": 3938,
+  "description": "",
+  "docs": []
+ },
+ {
+  "id": "town-blidavisao",
+  "category": "town",
+  "name": "Blidavisão",
+  "x": 4071,
+  "y": 3065,
+  "description": "",
+  "docs": []
+ },
+ {
+  "id": "city-blutstein",
+  "category": "city",
+  "name": "Blutstein",
+  "x": 1306,
+  "y": 4409,
+  "description": "",
+  "docs": []
+ },
+ {
+  "id": "poi-bordescanso",
+  "category": "poi",
+  "name": "Bordescanso",
+  "x": 3846,
+  "y": 4292,
+  "description": "",
+  "docs": []
+ },
+ {
+  "id": "poi-bosque-negro",
+  "category": "poi",
+  "name": "Bosque Negro",
+  "x": 4172,
+  "y": 2981,
+  "description": "",
+  "docs": []
+ },
+ {
+  "id": "town-brasaco",
+  "category": "town",
+  "name": "Brasaço",
+  "x": 3433,
+  "y": 4444,
+  "description": "",
+  "docs": []
+ },
+ {
+  "id": "poi-brisavale",
+  "category": "poi",
+  "name": "Brisavale",
+  "x": 3376,
+  "y": 4687,
+  "description": "",
+  "docs": []
+ },
+ {
+  "id": "city-brithgaladh",
+  "category": "city",
+  "name": "Brithgaladh",
+  "x": 3142,
+  "y": 5342,
+  "description": "",
+  "docs": []
+ },
+ {
+  "id": "poi-camindotrio",
+  "category": "poi",
+  "name": "Camindotrio",
+  "x": 3133,
+  "y": 4312,
+  "description": "",
+  "docs": []
+ },
+ {
+  "id": "poi-cascataseca",
+  "category": "poi",
+  "name": "Cascataseca",
+  "x": 4606,
+  "y": 4087,
+  "description": "",
+  "docs": []
+ },
+ {
+  "id": "temple-catedral-vermelha",
+  "category": "temple",
+  "name": "Catedral Vermelha",
+  "x": 4890,
+  "y": 3408,
+  "description": "",
+  "docs": []
+ },
+ {
+  "id": "town-caudragao",
+  "category": "town",
+  "name": "Caudragão",
+  "x": 5143,
+  "y": 3952,
+  "description": "",
+  "docs": []
+ },
+ {
+  "id": "town-cavernalta",
+  "category": "town",
+  "name": "Cavernalta",
+  "x": 4922,
+  "y": 4656,
+  "description": "",
+  "docs": []
+ },
+ {
+  "id": "town-cedrovento",
+  "category": "town",
+  "name": "Cedrovento",
+  "x": 3202,
+  "y": 4086,
+  "description": "",
+  "docs": []
+ },
+ {
+  "id": "ruin-charco-das-utricarias",
+  "category": "ruin",
+  "name": "Charco das Utricarias",
+  "x": 4866,
+  "y": 4144,
+  "description": "",
+  "docs": []
+ },
+ {
+  "id": "town-cidarvore",
+  "category": "town",
+  "name": "Cidárvore",
+  "x": 4198,
+  "y": 4289,
+  "description": "",
+  "docs": []
+ },
+ {
+  "id": "poi-cobrerrico",
+  "category": "poi",
+  "name": "Cobrerrico",
+  "x": 3227,
+  "y": 3604,
+  "description": "",
+  "docs": []
+ },
+ {
+  "id": "poi-cobrevelho",
+  "category": "poi",
+  "name": "Cobrevelho",
+  "x": 3498,
+  "y": 3619,
+  "description": "",
+  "docs": []
+ },
+ {
+  "id": "town-colinaurea",
+  "category": "town",
+  "name": "Colináurea",
+  "x": 3537,
+  "y": 3707,
+  "description": "",
+  "docs": []
+ },
+ {
+  "id": "poi-coral-fundo",
+  "category": "poi",
+  "name": "Coral Fundo",
+  "x": 3406,
+  "y": 4983,
+  "description": "",
+  "docs": []
+ },
+ {
+  "id": "ruin-coracao-da-floresta",
+  "category": "ruin",
+  "name": "Coração da Floresta",
+  "x": 5737,
+  "y": 3920,
+  "description": "",
+  "docs": []
+ },
+ {
+  "id": "poi-correndevento",
+  "category": "poi",
+  "name": "Correndevento",
+  "x": 5105,
+  "y": 3998,
+  "description": "",
+  "docs": []
+ },
+ {
+  "id": "poi-cortarvore",
+  "category": "poi",
+  "name": "Cortárvore",
+  "x": 3320,
+  "y": 4228,
+  "description": "",
+  "docs": []
+ },
+ {
+  "id": "poi-costas-do-gigante",
+  "category": "poi",
+  "name": "Costas do Gigante",
+  "x": 4661,
+  "y": 3074,
+  "description": "",
+  "docs": []
+ },
+ {
+  "id": "city-cristalmar",
+  "category": "city",
+  "name": "Cristalmar",
+  "x": 3518,
+  "y": 4908,
+  "description": "",
+  "docs": []
+ },
+ {
+  "id": "poi-descansodoheroi",
+  "category": "poi",
+  "name": "Descansodoheroi",
+  "x": 3895,
+  "y": 4934,
+  "description": "",
+  "docs": []
+ },
+ {
+  "id": "poi-dormidouro",
+  "category": "poi",
+  "name": "Dormidouro",
+  "x": 4952,
+  "y": 3264,
+  "description": "",
+  "docs": []
+ },
+ {
+  "id": "town-douralma",
+  "category": "town",
+  "name": "Douralma",
+  "x": 3869,
+  "y": 3059,
+  "description": "",
+  "docs": []
+ },
+ {
+  "id": "fort-dragao-vigilante",
+  "category": "fort",
+  "name": "Dragão Vigilante",
+  "x": 4416,
+  "y": 3496,
+  "description": "",
+  "docs": []
+ },
+ {
+  "id": "city-drevniy-mayak",
+  "category": "city",
+  "name": "Drevniy Mayak",
+  "x": 4910,
+  "y": 7095,
+  "description": "",
+  "docs": []
+ },
+ {
+  "id": "town-dunkelruh",
+  "category": "town",
+  "name": "Dunkelruh",
+  "x": 479,
+  "y": 5434,
+  "description": "",
+  "docs": []
+ },
+ {
+  "id": "capital-durand",
+  "category": "capital",
+  "name": "Dúrand",
+  "x": 2702,
+  "y": 4737,
+  "description": "",
+  "docs": []
+ },
+ {
+  "id": "town-eabbather",
+  "category": "town",
+  "name": "Eabbather",
+  "x": 1044,
+  "y": 3974,
+  "description": "",
+  "docs": []
+ },
+ {
+  "id": "town-ekaross",
+  "category": "town",
+  "name": "Ekaross",
+  "x": 1502,
+  "y": 4967,
+  "description": "",
+  "docs": []
+ },
+ {
+  "id": "town-encontro-do-leito",
+  "category": "town",
+  "name": "Encontro do Leito",
+  "x": 4462,
+  "y": 3813,
+  "description": "",
+  "docs": []
+ },
+ {
+  "id": "poi-escadarias-suspensas",
+  "category": "poi",
+  "name": "Escadarias Suspensas",
+  "x": 5308,
+  "y": 4497,
+  "description": "",
+  "docs": []
+ },
+ {
+  "id": "capital-escarpas-de-fogo",
+  "category": "capital",
+  "name": "Escarpas de Fogo",
+  "x": 5174,
+  "y": 2512,
+  "description": "",
+  "docs": []
+ },
+ {
+  "id": "town-escarpaviva",
+  "category": "town",
+  "name": "Escarpaviva",
+  "x": 3808,
+  "y": 3107,
+  "description": "",
+  "docs": []
+ },
+ {
+  "id": "town-espiralia",
+  "category": "town",
+  "name": "Espirália",
+  "x": 3314,
+  "y": 4562,
+  "description": "",
+  "docs": []
+ },
+ {
+  "id": "poi-estreito-da-foice",
+  "category": "poi",
+  "name": "Estreito da Foice",
+  "x": 3100,
+  "y": 3910,
+  "description": "",
+  "docs": []
+ },
+ {
+  "id": "fort-farol-da-vigilia",
+  "category": "fort",
+  "name": "Farol da Vigília",
+  "x": 3744,
+  "y": 4623,
+  "description": "",
+  "docs": []
+ },
+ {
+  "id": "town-ferrobrilho",
+  "category": "town",
+  "name": "Ferrobrilho",
+  "x": 4993,
+  "y": 4217,
+  "description": "",
+  "docs": []
+ },
+ {
+  "id": "town-ferrodente",
+  "category": "town",
+  "name": "Ferrodente",
+  "x": 5089,
+  "y": 3782,
+  "description": "",
+  "docs": []
+ },
+ {
+  "id": "city-fortaleza-de-ferro",
+  "category": "city",
+  "name": "Fortaleza de Ferro",
+  "x": 4469,
+  "y": 2753,
+  "description": "",
+  "docs": []
+ },
+ {
+  "id": "fort-forte-pavor",
+  "category": "fort",
+  "name": "Forte Pavor",
+  "x": 3967,
+  "y": 3876,
+  "description": "",
+  "docs": []
+ },
+ {
+  "id": "fort-forte-das-dunas",
+  "category": "fort",
+  "name": "Forte das Dunas",
+  "x": 3002,
+  "y": 3984,
+  "description": "",
+  "docs": []
+ },
+ {
+  "id": "fort-forte-dos-satiros",
+  "category": "fort",
+  "name": "Forte dos Sátiros",
+  "x": 3866,
+  "y": 3232,
+  "description": "",
+  "docs": []
+ },
+ {
+  "id": "fort-fortencosta",
+  "category": "fort",
+  "name": "Fortencosta",
+  "x": 3810,
+  "y": 2904,
+  "description": "",
+  "docs": []
+ },
+ {
+  "id": "poi-fosmeralda",
+  "category": "poi",
+  "name": "Fosmeralda",
+  "x": 4112,
+  "y": 4845,
+  "description": "",
+  "docs": []
+ },
+ {
+  "id": "city-galasul",
+  "category": "city",
+  "name": "Galasûl",
+  "x": 2094,
+  "y": 5068,
+  "description": "",
+  "docs": []
+ },
+ {
+  "id": "town-glanzfurt",
+  "category": "town",
+  "name": "Glanzfurt",
+  "x": 659,
+  "y": 5299,
+  "description": "",
+  "docs": []
+ },
+ {
+  "id": "city-glimmerstone",
+  "category": "city",
+  "name": "Glimmerstone",
+  "x": 4709,
+  "y": 5567,
+  "description": "",
+  "docs": []
+ },
+ {
+  "id": "poi-gruta-da-joia",
+  "category": "poi",
+  "name": "Gruta da Joia",
+  "x": 3339,
+  "y": 4909,
+  "description": "",
+  "docs": []
+ },
+ {
+  "id": "poi-guardiao-do-encontro",
+  "category": "poi",
+  "name": "Guardião do Encontro",
+  "x": 3858,
+  "y": 2981,
+  "description": "",
+  "docs": []
+ },
+ {
+  "id": "town-harrenks-bondor",
+  "category": "town",
+  "name": "Harrenks Bondor",
+  "x": 6525,
+  "y": 1267,
+  "description": "",
+  "docs": []
+ },
+ {
+  "id": "poi-isa",
+  "category": "poi",
+  "name": "Isá",
+  "x": 3810,
+  "y": 4792,
+  "description": "",
+  "docs": []
+ },
+ {
+  "id": "town-jardim-do-vale",
+  "category": "town",
+  "name": "Jardim do Vale",
+  "x": 3588,
+  "y": 4326,
+  "description": "",
+  "docs": []
+ },
+ {
+  "id": "poi-jardins-dormentes",
+  "category": "poi",
+  "name": "Jardins Dormentes",
+  "x": 3709,
+  "y": 4220,
+  "description": "",
+  "docs": []
+ },
+ {
+  "id": "town-justafe",
+  "category": "town",
+  "name": "Justafé",
+  "x": 3675,
+  "y": 3401,
+  "description": "",
+  "docs": []
+ },
+ {
+  "id": "town-lago-sereno",
+  "category": "town",
+  "name": "Lago Sereno",
+  "x": 3551,
+  "y": 5123,
+  "description": "",
+  "docs": []
+ },
+ {
+  "id": "town-lago-verde",
+  "category": "town",
+  "name": "Lago Verde",
+  "x": 3344,
+  "y": 4801,
+  "description": "",
+  "docs": []
+ },
+ {
+  "id": "town-laspedras",
+  "category": "town",
+  "name": "Laspedras",
+  "x": 4683,
+  "y": 3593,
+  "description": "",
+  "docs": []
+ },
+ {
+  "id": "poi-lasshir",
+  "category": "poi",
+  "name": "Lasshir",
+  "x": 2519,
+  "y": 4903,
+  "description": "",
+  "docs": []
+ },
+ {
+  "id": "poi-leito-seco",
+  "category": "poi",
+  "name": "Leito Seco",
+  "x": 3622,
+  "y": 5009,
+  "description": "",
+  "docs": []
+ },
+ {
+  "id": "city-linduriel",
+  "category": "city",
+  "name": "Lindúriel",
+  "x": 2461,
+  "y": 5892,
+  "description": "",
+  "docs": []
+ },
+ {
+  "id": "town-longaco",
+  "category": "town",
+  "name": "Longaço",
+  "x": 4251,
+  "y": 2992,
+  "description": "",
+  "docs": []
+ },
+ {
+  "id": "town-lumiterra",
+  "category": "town",
+  "name": "Lumiterra",
+  "x": 4550,
+  "y": 3913,
+  "description": "",
+  "docs": []
+ },
+ {
+  "id": "city-lunargenta",
+  "category": "city",
+  "name": "Lunargenta",
+  "x": 3586,
+  "y": 5369,
+  "description": "",
+  "docs": []
+ },
+ {
+  "id": "poi-luz-guiadora",
+  "category": "poi",
+  "name": "Luz Guiadora",
+  "x": 4027,
+  "y": 3716,
+  "description": "",
+  "docs": []
+ },
+ {
+  "id": "capital-lagrima-de-savras",
+  "category": "capital",
+  "name": "Lágrima de Savras",
+  "x": 2931,
+  "y": 3132,
+  "description": "",
+  "docs": []
+ },
+ {
+  "id": "city-manarat-al-fajr",
+  "category": "city",
+  "name": "Manarat al-Fajr",
+  "x": 1611,
+  "y": 1701,
+  "description": "",
+  "docs": []
+ },
+ {
+  "id": "city-marena",
+  "category": "city",
+  "name": "Marena",
+  "x": 4141,
+  "y": 6928,
+  "description": "",
+  "docs": []
+ },
+ {
+  "id": "city-meghdut",
+  "category": "city",
+  "name": "Meghdut",
+  "x": 5529,
+  "y": 1102,
+  "description": "",
+  "docs": []
+ },
+ {
+  "id": "town-minas-komgrum",
+  "category": "town",
+  "name": "Minas Komgrum",
+  "x": 4649,
+  "y": 4784,
+  "description": "",
+  "docs": []
+ },
+ {
+  "id": "town-minouminas",
+  "category": "town",
+  "name": "Minouminas",
+  "x": 4657,
+  "y": 4554,
+  "description": "",
+  "docs": []
+ },
+ {
+  "id": "town-montescama",
+  "category": "town",
+  "name": "Montescama",
+  "x": 4345,
+  "y": 3286,
+  "description": "",
+  "docs": []
+ },
+ {
+  "id": "town-morrodouro",
+  "category": "town",
+  "name": "Morrodouro",
+  "x": 3510,
+  "y": 4169,
+  "description": "",
+  "docs": []
+ },
+ {
+  "id": "poi-morruivante",
+  "category": "poi",
+  "name": "Morruivante",
+  "x": 3512,
+  "y": 4604,
+  "description": "",
+  "docs": []
+ },
+ {
+  "id": "city-morskaya-zvezda",
+  "category": "city",
+  "name": "Morskaya Zvezda",
+  "x": 4407,
+  "y": 7042,
+  "description": "",
+  "docs": []
+ },
+ {
+  "id": "city-morskoy-veter",
+  "category": "city",
+  "name": "Morskoy Veter",
+  "x": 5012,
+  "y": 6561,
+  "description": "",
+  "docs": []
+ },
+ {
+  "id": "city-myrkondor",
+  "category": "city",
+  "name": "Myrkondor",
+  "x": 7191,
+  "y": 2297,
+  "description": "",
+  "docs": []
+ },
+ {
+  "id": "city-nebelburg",
+  "category": "city",
+  "name": "Nebelburg",
+  "x": 722,
+  "y": 4818,
+  "description": "",
+  "docs": []
+ },
+ {
+  "id": "town-negromonte",
+  "category": "town",
+  "name": "Negromonte",
+  "x": 4836,
+  "y": 3991,
+  "description": "",
+  "docs": []
+ },
+ {
+  "id": "city-nezhny-briz",
+  "category": "city",
+  "name": "Nezhny Briz",
+  "x": 5413,
+  "y": 5678,
+  "description": "",
+  "docs": []
+ },
+ {
+  "id": "city-norxalia",
+  "category": "city",
+  "name": "Norxalia",
+  "x": 6001,
+  "y": 4014,
+  "description": "",
+  "docs": []
+ },
+ {
+  "id": "city-nova-cineria",
+  "category": "city",
+  "name": "Nova Cinéria",
+  "x": 4083,
+  "y": 2924,
+  "description": "",
+  "docs": []
+ },
+ {
+  "id": "town-nevoa-densa",
+  "category": "town",
+  "name": "Névoa Densa",
+  "x": 4057,
+  "y": 3391,
+  "description": "",
+  "docs": []
+ },
+ {
+  "id": "ruin-o-troll-cambaleante",
+  "category": "ruin",
+  "name": "O Troll Cambaleante",
+  "x": 5840,
+  "y": 4147,
+  "description": "",
+  "docs": []
+ },
+ {
+  "id": "capital-olivideira",
+  "category": "capital",
+  "name": "Olivideira",
+  "x": 3993,
+  "y": 5434,
+  "description": "",
+  "docs": []
+ },
+ {
+  "id": "town-otikrom-nagori",
+  "category": "town",
+  "name": "Otikrom Nagori",
+  "x": 6432,
+  "y": 1534,
+  "description": "",
+  "docs": []
+ },
+ {
+  "id": "town-ourovale",
+  "category": "town",
+  "name": "Ourovale",
+  "x": 3509,
+  "y": 3535,
+  "description": "",
+  "docs": []
+ },
+ {
+  "id": "city-oasis-de-prata",
+  "category": "city",
+  "name": "Oásis de Prata",
+  "x": 2765,
+  "y": 4062,
+  "description": "",
+  "docs": []
+ },
+ {
+  "id": "ruin-oasis-do-espelho",
+  "category": "ruin",
+  "name": "Oásis do Espelho",
+  "x": 2212,
+  "y": 2496,
+  "description": "",
+  "docs": []
+ },
+ {
+  "id": "city-pakhi-jangal",
+  "category": "city",
+  "name": "Pakhi Jangal",
+  "x": 6777,
+  "y": 1875,
+  "description": "",
+  "docs": []
+ },
+ {
+  "id": "poi-passagem-antiga",
+  "category": "poi",
+  "name": "Passagem Antiga",
+  "x": 4997,
+  "y": 3818,
+  "description": "",
+  "docs": []
+ },
+ {
+  "id": "town-passo-da-hidra",
+  "category": "town",
+  "name": "Passo da Hidra",
+  "x": 3296,
+  "y": 4937,
+  "description": "",
+  "docs": []
+ },
+ {
+  "id": "poi-pedra-serena",
+  "category": "poi",
+  "name": "Pedra Serena",
+  "x": 3737,
+  "y": 4422,
+  "description": "",
+  "docs": []
+ },
+ {
+  "id": "poi-pedrabranca",
+  "category": "poi",
+  "name": "Pedrabranca",
+  "x": 4080,
+  "y": 5117,
+  "description": "",
+  "docs": []
+ },
+ {
+  "id": "poi-pedrabrasa",
+  "category": "poi",
+  "name": "Pedrabrasa",
+  "x": 4407,
+  "y": 2920,
+  "description": "",
+  "docs": []
+ },
+ {
+  "id": "town-pedraforte",
+  "category": "town",
+  "name": "Pedraforte",
+  "x": 4772,
+  "y": 4742,
+  "description": "",
+  "docs": []
+ },
+ {
+  "id": "poi-pedralisa",
+  "category": "poi",
+  "name": "Pedralisa",
+  "x": 4590,
+  "y": 4318,
+  "description": "",
+  "docs": []
+ },
+ {
+  "id": "poi-pedraria",
+  "category": "poi",
+  "name": "Pedraria",
+  "x": 3537,
+  "y": 3978,
+  "description": "",
+  "docs": []
+ },
+ {
+  "id": "town-pedraviva",
+  "category": "town",
+  "name": "Pedraviva",
+  "x": 3250,
+  "y": 3772,
+  "description": "",
+  "docs": []
+ },
+ {
+  "id": "town-pico-verde",
+  "category": "town",
+  "name": "Pico Verde",
+  "x": 3189,
+  "y": 4518,
+  "description": "",
+  "docs": []
+ },
+ {
+  "id": "town-pico-do-falcao",
+  "category": "town",
+  "name": "Pico do Falcão",
+  "x": 3803,
+  "y": 3223,
+  "description": "",
+  "docs": []
+ },
+ {
+  "id": "poi-piconevado",
+  "category": "poi",
+  "name": "Piconevado",
+  "x": 3871,
+  "y": 3635,
+  "description": "",
+  "docs": []
+ },
+ {
+  "id": "poi-pinha-branca",
+  "category": "poi",
+  "name": "Pinha Branca",
+  "x": 4203,
+  "y": 2885,
+  "description": "",
+  "docs": []
+ },
+ {
+  "id": "capital-podmo-bihari",
+  "category": "capital",
+  "name": "Podmo Bihari",
+  "x": 6274,
+  "y": 1517,
+  "description": "",
+  "docs": []
+ },
+ {
+  "id": "city-ponte-de-jade",
+  "category": "city",
+  "name": "Ponte de Jade",
+  "x": 4244,
+  "y": 3853,
+  "description": "",
+  "docs": []
+ },
+ {
+  "id": "poi-porion",
+  "category": "poi",
+  "name": "Porión",
+  "x": 3690,
+  "y": 4809,
+  "description": "",
+  "docs": []
+ },
+ {
+  "id": "town-porto-calmaria",
+  "category": "town",
+  "name": "Porto Calmaria",
+  "x": 3942,
+  "y": 5251,
+  "description": "",
+  "docs": []
+ },
+ {
+  "id": "poi-portofundo",
+  "category": "poi",
+  "name": "Portofundo",
+  "x": 4500,
+  "y": 4262,
+  "description": "",
+  "docs": []
+ },
+ {
+  "id": "poi-pratencosta",
+  "category": "poi",
+  "name": "Pratencosta",
+  "x": 3606,
+  "y": 3779,
+  "description": "",
+  "docs": []
+ },
+ {
+  "id": "town-presa-branca",
+  "category": "town",
+  "name": "Presa Branca",
+  "x": 4961,
+  "y": 3596,
+  "description": "",
+  "docs": []
+ },
+ {
+  "id": "city-qalb-al-ramal",
+  "category": "city",
+  "name": "Qalb al-Ramal",
+  "x": 1033,
+  "y": 2509,
+  "description": "",
+  "docs": []
+ },
+ {
+  "id": "city-qasr-al-riyah",
+  "category": "city",
+  "name": "Qasr al-Riyah",
+  "x": 1343,
+  "y": 3377,
+  "description": "",
+  "docs": []
+ },
+ {
+  "id": "town-queda-brusca",
+  "category": "town",
+  "name": "Queda Brusca",
+  "x": 3865,
+  "y": 4420,
+  "description": "",
+  "docs": []
+ },
+ {
+  "id": "poi-raiz-alta",
+  "category": "poi",
+  "name": "Raiz Alta",
+  "x": 5240,
+  "y": 3925,
+  "description": "",
+  "docs": []
+ },
+ {
+  "id": "town-refugio-do-lago",
+  "category": "town",
+  "name": "Refúgio do Lago",
+  "x": 3424,
+  "y": 4817,
+  "description": "",
+  "docs": []
+ },
+ {
+  "id": "town-ricascata",
+  "category": "town",
+  "name": "Ricascata",
+  "x": 3802,
+  "y": 3720,
+  "description": "",
+  "docs": []
+ },
+ {
+  "id": "town-rochadura",
+  "category": "town",
+  "name": "Rochadura",
+  "x": 4740,
+  "y": 3449,
+  "description": "",
+  "docs": []
+ },
+ {
+  "id": "fort-rochanegra",
+  "category": "fort",
+  "name": "Rochanegra",
+  "x": 4907,
+  "y": 3890,
+  "description": "",
+  "docs": []
+ },
+ {
+  "id": "poi-rochaviva",
+  "category": "poi",
+  "name": "Rochaviva",
+  "x": 3569,
+  "y": 3227,
+  "description": "",
+  "docs": []
+ },
+ {
+  "id": "ruin-ruinas-yuan-ti",
+  "category": "ruin",
+  "name": "Ruínas Yuan-ti",
+  "x": 1968,
+  "y": 2725,
+  "description": "",
+  "docs": []
+ },
+ {
+  "id": "ruin-ruinas-dos-yuan-ti",
+  "category": "ruin",
+  "name": "Ruínas dos Yuan-ti",
+  "x": 2576,
+  "y": 3667,
+  "description": "",
+  "docs": []
+ },
+ {
+  "id": "poi-sentinelaltivo",
+  "category": "poi",
+  "name": "Sentinelaltivo",
+  "x": 4093,
+  "y": 3019,
+  "description": "",
+  "docs": []
+ },
+ {
+  "id": "capital-shuplaishain",
+  "category": "capital",
+  "name": "Shuplaishain",
+  "x": 4840,
+  "y": 5295,
+  "description": "",
+  "docs": []
+ },
+ {
+  "id": "city-silberfeld",
+  "category": "city",
+  "name": "Silberfeld",
+  "x": 1651,
+  "y": 4770,
+  "description": "",
+  "docs": []
+ },
+ {
+  "id": "city-sinyaya-pristan",
+  "category": "city",
+  "name": "Sinyaya Pristan",
+  "x": 4937,
+  "y": 6006,
+  "description": "",
+  "docs": []
+ },
+ {
+  "id": "poi-sombra-d-arvore",
+  "category": "poi",
+  "name": "Sombra D'árvore",
+  "x": 4472,
+  "y": 3741,
+  "description": "",
+  "docs": []
+ },
+ {
+  "id": "town-sonhalia",
+  "category": "town",
+  "name": "Sonhália",
+  "x": 3427,
+  "y": 4683,
+  "description": "",
+  "docs": []
+ },
+ {
+  "id": "town-sopro-divino",
+  "category": "town",
+  "name": "Sopro Divino",
+  "x": 4107,
+  "y": 4909,
+  "description": "",
+  "docs": []
+ },
+ {
+  "id": "town-sopromonte",
+  "category": "town",
+  "name": "Sopromonte",
+  "x": 3617,
+  "y": 4500,
+  "description": "",
+  "docs": []
+ },
+ {
+  "id": "town-subliga",
+  "category": "town",
+  "name": "Subliga",
+  "x": 4522,
+  "y": 4249,
+  "description": "",
+  "docs": []
+ },
+ {
+  "id": "city-sunspire",
+  "category": "city",
+  "name": "Sunspire",
+  "x": 4991,
+  "y": 5127,
+  "description": "",
+  "docs": []
+ },
+ {
+  "id": "ruin-suplicio-do-gigante",
+  "category": "ruin",
+  "name": "Suplício do Gigante",
+  "x": 3007,
+  "y": 3286,
+  "description": "",
+  "docs": []
+ },
+ {
+  "id": "city-taur-gwaew",
+  "category": "city",
+  "name": "Taur Gwaew",
+  "x": 2235,
+  "y": 6800,
+  "description": "",
+  "docs": []
+ },
+ {
+  "id": "city-tayny-utes",
+  "category": "city",
+  "name": "Tayny Utes",
+  "x": 5157,
+  "y": 4724,
+  "description": "",
+  "docs": []
+ },
+ {
+  "id": "town-tempesterra",
+  "category": "town",
+  "name": "Tempesterra",
+  "x": 5561,
+  "y": 5578,
+  "description": "",
+  "docs": []
+ },
+ {
+  "id": "city-terrachiara",
+  "category": "city",
+  "name": "Terrachiara",
+  "x": 3575,
+  "y": 5990,
+  "description": "",
+  "docs": []
+ },
+ {
+  "id": "city-thindol",
+  "category": "city",
+  "name": "Thindol",
+  "x": 3051,
+  "y": 6808,
+  "description": "",
+  "docs": []
+ },
+ {
+  "id": "town-thundoria",
+  "category": "town",
+  "name": "Thundoria",
+  "x": 1284,
+  "y": 4554,
+  "description": "",
+  "docs": []
+ },
+ {
+  "id": "poi-tontad",
+  "category": "poi",
+  "name": "Tontad",
+  "x": 6420,
+  "y": 1411,
+  "description": "",
+  "docs": []
+ },
+ {
+  "id": "poi-torralta",
+  "category": "poi",
+  "name": "Torralta",
+  "x": 4345,
+  "y": 2983,
+  "description": "",
+  "docs": []
+ },
+ {
+  "id": "poi-trevalho",
+  "category": "poi",
+  "name": "Trevalho",
+  "x": 5081,
+  "y": 3565,
+  "description": "",
+  "docs": []
+ },
+ {
+  "id": "poi-tribo-dos-desbravadores-dunos",
+  "category": "poi",
+  "name": "Tribo dos Desbravadores Dunos",
+  "x": 3278,
+  "y": 2495,
+  "description": "",
+  "docs": []
+ },
+ {
+  "id": "poi-trismeralda",
+  "category": "poi",
+  "name": "Trismeralda",
+  "x": 3906,
+  "y": 3979,
+  "description": "",
+  "docs": []
+ },
+ {
+  "id": "poi-tristrada",
+  "category": "poi",
+  "name": "Tristrada",
+  "x": 4728,
+  "y": 2899,
+  "description": "",
+  "docs": []
+ },
+ {
+  "id": "poi-troncaido",
+  "category": "poi",
+  "name": "Troncaído",
+  "x": 3974,
+  "y": 2869,
+  "description": "",
+  "docs": []
+ },
+ {
+  "id": "poi-umbrafen",
+  "category": "poi",
+  "name": "Umbrafen",
+  "x": 7616,
+  "y": 2733,
+  "description": "",
+  "docs": []
+ },
+ {
+  "id": "poi-vaceres",
+  "category": "poi",
+  "name": "Vaceres",
+  "x": 7294,
+  "y": 2922,
+  "description": "",
+  "docs": []
+ },
+ {
+  "id": "town-vale-da-brisa",
+  "category": "town",
+  "name": "Vale da Brisa",
+  "x": 4099,
+  "y": 4654,
+  "description": "",
+  "docs": []
+ },
+ {
+  "id": "town-vale-das-aguias",
+  "category": "town",
+  "name": "Vale das Águias",
+  "x": 4601,
+  "y": 3179,
+  "description": "",
+  "docs": []
+ },
+ {
+  "id": "poi-vale-do-sopro",
+  "category": "poi",
+  "name": "Vale do Sopro",
+  "x": 3154,
+  "y": 4530,
+  "description": "",
+  "docs": []
+ },
+ {
+  "id": "town-valedofosso",
+  "category": "town",
+  "name": "Valedofosso",
+  "x": 4479,
+  "y": 4326,
+  "description": "",
+  "docs": []
+ },
+ {
+  "id": "town-valepetreo",
+  "category": "town",
+  "name": "Valepétreo",
+  "x": 4717,
+  "y": 3720,
+  "description": "",
+  "docs": []
+ },
+ {
+  "id": "poi-valeverde",
+  "category": "poi",
+  "name": "Valeverde",
+  "x": 4796,
+  "y": 3670,
+  "description": "",
+  "docs": []
+ },
+ {
+  "id": "poi-vaporscaldante",
+  "category": "poi",
+  "name": "Vaporscaldante",
+  "x": 3150,
+  "y": 4206,
+  "description": "",
+  "docs": []
+ },
+ {
+  "id": "poi-vegetabol",
+  "category": "poi",
+  "name": "Vegetabol",
+  "x": 4912,
+  "y": 5256,
+  "description": "",
+  "docs": []
+ },
+ {
+  "id": "poi-venthariza",
+  "category": "poi",
+  "name": "Ventharíza",
+  "x": 4024,
+  "y": 3919,
+  "description": "",
+  "docs": []
+ },
+ {
+  "id": "town-ventobravo",
+  "category": "town",
+  "name": "Ventobravo",
+  "x": 3267,
+  "y": 4751,
+  "description": "",
+  "docs": []
+ },
+ {
+  "id": "town-ventobreve",
+  "category": "town",
+  "name": "Ventobreve",
+  "x": 4327,
+  "y": 5231,
+  "description": "",
+  "docs": []
+ },
+ {
+  "id": "town-ventoforte",
+  "category": "town",
+  "name": "Ventoforte",
+  "x": 4361,
+  "y": 4649,
+  "description": "",
+  "docs": []
+ },
+ {
+  "id": "town-ventos-perdidos",
+  "category": "town",
+  "name": "Ventos Perdidos",
+  "x": 4373,
+  "y": 4976,
+  "description": "",
+  "docs": []
+ },
+ {
+  "id": "poi-ventoscaldante",
+  "category": "poi",
+  "name": "Ventoscaldante",
+  "x": 2620,
+  "y": 3952,
+  "description": "",
+  "docs": []
+ },
+ {
+  "id": "poi-ventagua",
+  "category": "poi",
+  "name": "Ventágua",
+  "x": 4282,
+  "y": 4772,
+  "description": "",
+  "docs": []
+ },
+ {
+  "id": "poi-veusmeralda",
+  "category": "poi",
+  "name": "Veusmeralda",
+  "x": 4248,
+  "y": 3684,
+  "description": "",
+  "docs": []
+ },
+ {
+  "id": "poi-vhentar",
+  "category": "poi",
+  "name": "Vhentar",
+  "x": 793,
+  "y": 5519,
+  "description": "",
+  "docs": []
+ },
+ {
+  "id": "fort-vigia-guardia",
+  "category": "fort",
+  "name": "Vigia Guardiã",
+  "x": 3021,
+  "y": 4258,
+  "description": "",
+  "docs": []
+ },
+ {
+  "id": "fort-vigia-solitario",
+  "category": "fort",
+  "name": "Vigia Solitário",
+  "x": 4338,
+  "y": 4407,
+  "description": "",
+  "docs": []
+ },
+ {
+  "id": "poi-vigiadaponte",
+  "category": "poi",
+  "name": "Vigiadaponte",
+  "x": 4736,
+  "y": 3150,
+  "description": "",
+  "docs": []
+ },
+ {
+  "id": "poi-vila-homem-urso",
+  "category": "poi",
+  "name": "Vila Homem-urso",
+  "x": 4403,
+  "y": 3237,
+  "description": "",
+  "docs": []
+ },
+ {
+  "id": "poi-vilalta",
+  "category": "poi",
+  "name": "Vilalta",
+  "x": 3597,
+  "y": 4810,
+  "description": "",
+  "docs": []
+ },
+ {
+  "id": "city-vindora",
+  "category": "city",
+  "name": "Vindora",
+  "x": 3214,
+  "y": 4252,
+  "description": "",
+  "docs": []
+ },
+ {
+  "id": "town-vinalea",
+  "category": "town",
+  "name": "Vinálea",
+  "x": 3937,
+  "y": 5669,
+  "description": "",
+  "docs": []
+ },
+ {
+  "id": "poi-voareia",
+  "category": "poi",
+  "name": "Voareia",
+  "x": 2737,
+  "y": 3829,
+  "description": "",
+  "docs": []
+ },
+ {
+  "id": "city-zenthara",
+  "category": "city",
+  "name": "Zenthara",
+  "x": 6906,
+  "y": 2841,
+  "description": "",
+  "docs": []
+ },
+ {
+  "id": "city-zyrakath",
+  "category": "city",
+  "name": "Zyrakath",
+  "x": 7008,
+  "y": 3853,
+  "description": "",
+  "docs": []
+ }
 ]

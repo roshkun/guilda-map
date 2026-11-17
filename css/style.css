@@ -54,14 +54,13 @@ body.sidebar-closed #map{left:0}
 body:not(.sidebar-closed) .leaflet-top.leaflet-left .leaflet-control-zoom{margin-left:60px}
 
 /* pins */
-.pin{position:relative;width:34px;height:34px;transform:translate(-50%,-100%)}
-.pin .bubble{width:34px;height:34px;border-radius:50% 50% 50% 0;transform:rotate(-45deg);
+.pin{position:relative;width:var(--s,34px);height:var(--s,34px);transform:translate(-50%,-100%)}
+.pin .bubble{width:var(--s,34px);height:var(--s,34px);border-radius:50% 50% 50% 0;transform:rotate(-45deg);
   background:var(--c,#fff);border:2px solid #0008;box-shadow:0 2px 6px #0009;display:grid;place-items:center}
-.pin .bubble span{transform:rotate(45deg);font-size:16px;line-height:1}
+.pin .bubble span{transform:rotate(45deg);font-size:calc(var(--s,34px)*.47);line-height:1}
 .pin .pin-name{position:absolute;left:50%;top:100%;transform:translateX(-50%);margin-top:2px;white-space:nowrap;
   font-size:12px;font-weight:600;color:#fff;text-shadow:0 0 3px #000,0 0 3px #000,0 0 5px #000;
   pointer-events:none;display:none}
-.show-names .pin .pin-name{display:block}
 .pin.highlight .bubble{animation:pulse 1s 3}
 @keyframes pulse{50%{transform:rotate(-45deg) scale(1.35)}}
 

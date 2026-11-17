@@ -1,3 +1,0 @@
-# valdor
-
-Documento de exemplo.

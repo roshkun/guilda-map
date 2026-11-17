@@ -1,4 +1,4 @@
-# Meu Mapa
+# Guilda Map
 
 Mapa interativo sobre uma imagem (mundo imaginário), feito com [Leaflet](https://leafletjs.com) — mesma base do witcher3map, sem build.
 
@@ -9,10 +9,15 @@ python3 -m http.server 8000   # dentro desta pasta
 ```
 (Abrir o `index.html` direto pelo arquivo não funciona: o navegador bloqueia o `fetch` dos JSON.)
 
-## Trocar a imagem
-1. Coloque sua imagem em `assets/` (ex.: `assets/meu-mundo.jpg`).
-2. Em `data/config.json`, ajuste `image`, `width` e `height` (em pixels, da própria imagem).
-3. Ajuste `initialView` (onde o mapa abre).
+## Trocar a imagem do mapa (tiles)
+Imagens grandes são cortadas em "tiles" (pedaços de 256 px em vários zooms), como nos mapas de jogos.
+```bash
+pip install pillow
+python3 tools/make_tiles.py caminho/da/imagem.png assets/tiles webp 80
+```
+O script imprime `width`, `height` e `maxNativeZoom`; copie esses valores para `data/config.json`
+(`width`, `height`, `tiles.maxNativeZoom`). A imagem original (110 MB) não está no repositório — guarde-a em `source/` (já ignorada pelo git).
+Para uma imagem pequena sem tiles, use `"image": "assets/mapa.jpg"` no lugar de `"tiles"`.
 
 ## Adicionar marcadores
 Edite `data/markers.json`. Cada item:
@@ -29,15 +34,15 @@ Edite `data/markers.json`. Cada item:
   "area": [[480,620],[720,480],[1050,560]]
 }
 ```
-- `x`/`y`: pixels da imagem, origem no canto superior esquerdo.
-- `category`: um `id` de `config.json` (country, duchy, city, town, poi, pin).
+- `x`/`y`: pixels da imagem original (8192×8192), origem no canto superior esquerdo.
+- `category`: um `id` de `config.json` (country, duchy, capital, city, town, fort, ruin, temple, poi, pin).
 - `icon`, `aliases`, `docs`, `area` (polígono tracejado de fronteira) são opcionais.
 - `docs[].url` pode ser um arquivo em `docs/`, Google Docs, Notion, PDF ou qualquer link.
 
 **Descobrir coordenadas:** abra `http://localhost:8000/?edit` e clique no mapa — `"x": …, "y": …` é copiado para a área de transferência.
 
 ## Categorias
-Em `data/config.json` → `categories`: nome, ícone, cor, `style` (`label-xl`/`label-lg` = texto no mapa, `pin` = alfinete) e `minZoom` (zoom a partir do qual aparece).
+Em `data/config.json` → `categories`: nome, ícone, cor, `style` (`label-xl`/`label-lg` = texto no mapa, `pin` = alfinete) `minZoom` (zoom a partir do qual aparece), `namesZoom` (zoom a partir do qual o nome é exibido) e `size` (tamanho do pin).
 
 ## Recursos
 Busca (ignora acentos; procura em nome, apelidos, títulos de documentos e descrição) · filtros por categoria · link permanente (`#x=…&y=…&z=…&m=id`) · botão de copiar link · botão direito/segurar para ocultar um pin · layout para celular · preferências salvas no navegador.

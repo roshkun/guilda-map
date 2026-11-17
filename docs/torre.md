@@ -1,3 +1,0 @@
-# torre
-
-Documento de exemplo.

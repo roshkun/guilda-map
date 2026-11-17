@@ -1,18 +1,125 @@
 {
-  "title": "Meu Mapa",
-  "subtitle": "Atlas do meu mundo",
-  "image": "assets/mapa.jpg",
-  "width": 2400,
-  "height": 1600,
-  "minZoom": -2,
-  "maxZoom": 2,
-  "initialView": { "x": 1200, "y": 800, "zoom": -1 },
+  "title": "Guilda Map",
+  "subtitle": "Atlas do mundo da guilda",
+  "tiles": {
+    "url": "assets/tiles/{z}/{x}/{y}.webp",
+    "maxNativeZoom": 5
+  },
+  "width": 8192,
+  "height": 8192,
+  "minZoom": 1,
+  "maxZoom": 6,
+  "initialView": {
+    "x": 4096,
+    "y": 4096,
+    "zoom": 2
+  },
   "categories": [
-    { "id": "country", "name": "Países",             "icon": "👑", "color": "#e0b341", "style": "label-xl", "minZoom": -2, "visible": true },
-    { "id": "duchy",   "name": "Ducados",            "icon": "🛡️", "color": "#c97b5a", "style": "label-lg", "minZoom": -1, "visible": true },
-    { "id": "city",    "name": "Cidades",            "icon": "🏰", "color": "#e8e8e8", "style": "pin",      "minZoom": -1, "visible": true },
-    { "id": "town",    "name": "Vilas",              "icon": "🏘️", "color": "#b9d48a", "style": "pin",      "minZoom": 0,  "visible": true },
-    { "id": "poi",     "name": "Pontos de interesse","icon": "⭐", "color": "#7fc4f0", "style": "pin",      "minZoom": 0,  "visible": true },
-    { "id": "pin",     "name": "Meus pins",          "icon": "📍", "color": "#f06d6d", "style": "pin",      "minZoom": -2, "visible": true }
+    {
+      "id": "country",
+      "name": "Países",
+      "icon": "🚩",
+      "color": "#e0b341",
+      "style": "label-xl",
+      "minZoom": 1,
+      "visible": true
+    },
+    {
+      "id": "duchy",
+      "name": "Ducados",
+      "icon": "⚜️",
+      "color": "#e39a6f",
+      "style": "label-lg",
+      "minZoom": 2,
+      "visible": true
+    },
+    {
+      "id": "capital",
+      "name": "Capitais",
+      "icon": "👑",
+      "color": "#f2c94c",
+      "style": "pin",
+      "size": 38,
+      "minZoom": 1,
+      "namesZoom": 1.5,
+      "visible": true
+    },
+    {
+      "id": "city",
+      "name": "Cidades",
+      "icon": "🏙️",
+      "color": "#e8e8e8",
+      "style": "pin",
+      "size": 32,
+      "minZoom": 2,
+      "namesZoom": 2.5,
+      "visible": true
+    },
+    {
+      "id": "town",
+      "name": "Vilas",
+      "icon": "🏘️",
+      "color": "#b9d48a",
+      "style": "pin",
+      "size": 26,
+      "minZoom": 3,
+      "namesZoom": 3.5,
+      "visible": true
+    },
+    {
+      "id": "fort",
+      "name": "Fortalezas",
+      "icon": "🏰",
+      "color": "#e8954a",
+      "style": "pin",
+      "size": 26,
+      "minZoom": 3,
+      "namesZoom": 3.5,
+      "visible": true
+    },
+    {
+      "id": "ruin",
+      "name": "Ruínas",
+      "icon": "🏚️",
+      "color": "#b48ad9",
+      "style": "pin",
+      "size": 26,
+      "minZoom": 3,
+      "namesZoom": 3.5,
+      "visible": true
+    },
+    {
+      "id": "temple",
+      "name": "Templos / Monastérios",
+      "icon": "⛪",
+      "color": "#8fd3d9",
+      "style": "pin",
+      "size": 26,
+      "minZoom": 3,
+      "namesZoom": 3.5,
+      "visible": true
+    },
+    {
+      "id": "poi",
+      "name": "Pontos de interesse",
+      "icon": "⭐",
+      "color": "#7fc4f0",
+      "style": "pin",
+      "size": 24,
+      "minZoom": 3.5,
+      "namesZoom": 4,
+      "visible": true
+    },
+    {
+      "id": "pin",
+      "name": "Meus pins",
+      "icon": "📍",
+      "color": "#f06d6d",
+      "style": "pin",
+      "size": 32,
+      "minZoom": 1,
+      "namesZoom": 2,
+      "visible": true
+    }
   ]
 }

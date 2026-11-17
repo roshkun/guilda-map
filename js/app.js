@@ -30,7 +30,7 @@
   }
   function load(key) { try { return JSON.parse(localStorage.getItem(key)) || {}; } catch (e) { return {}; } }
   function save(key, v) { try { localStorage.setItem(key, JSON.stringify(v)); } catch (e) { /* ignora */ } }
-  function toLatLng(x, y) { return L.latLng(H - y, x); }
+  function toLatLng(x, y) { return L.latLng(-y, x); }   // y da imagem cresce para baixo
   function toast(msg) {
     var t = $('toast'); t.textContent = msg; t.hidden = false;
     clearTimeout(toast._t); toast._t = setTimeout(function () { t.hidden = true; }, 2200);
@@ -71,15 +71,27 @@
     });
     hiddenMarkers = load(HIDDEN_KEY);
 
-    var bounds = L.latLngBounds([[0, 0], [H, W]]);
+    var bounds = L.latLngBounds([[-H, 0], [0, W]]);
+    var crs = L.CRS.Simple, tiles = cfg.tiles;
+    if (tiles) {
+      // zoom nativo máximo = 1 pixel da imagem por unidade → coordenadas dos JSON = pixels da imagem original
+      crs = L.extend({}, L.CRS.Simple, { transformation: new L.Transformation(1 / Math.pow(2, tiles.maxNativeZoom), 0, -1 / Math.pow(2, tiles.maxNativeZoom), 0) });
+    }
     map = L.map('map', {
-      crs: L.CRS.Simple,
+      crs: crs,
       minZoom: cfg.minZoom, maxZoom: cfg.maxZoom,
       zoomSnap: 0.25, zoomDelta: 0.5, wheelPxPerZoomLevel: 120,
       maxBounds: bounds.pad(0.25), maxBoundsViscosity: 0.8,
       attributionControl: false
     });
-    L.imageOverlay(cfg.image, bounds).addTo(map);
+    if (tiles) {
+      L.tileLayer(tiles.url, {
+        tileSize: 256, minNativeZoom: 0, maxNativeZoom: tiles.maxNativeZoom,
+        minZoom: cfg.minZoom, maxZoom: cfg.maxZoom, bounds: bounds, noWrap: true
+      }).addTo(map);
+    } else {
+      L.imageOverlay(cfg.image, bounds).addTo(map);
+    }
 
     cfg.categories.forEach(function (c) {
       catGroups[c.id] = { pins: L.layerGroup(), areas: L.layerGroup() };
@@ -108,7 +120,7 @@
       icon = L.divIcon({
         className: '',
         iconSize: [0, 0],
-        html: '<div class="pin" style="--c:' + esc(color) + '"><div class="bubble"><span>' + esc(m.icon || cat.icon) +
+        html: '<div class="pin" style="--c:' + esc(color) + ';--s:' + (cat.size || 32) + 'px"><div class="bubble"><span>' + esc(m.icon || cat.icon) +
               '</span></div><span class="pin-name">' + esc(m.name) + '</span></div>'
       });
     } else {
@@ -153,11 +165,11 @@
   /* Mostra/oculta cada marcador de acordo com categoria, zoom e ocultação manual */
   function refresh() {
     var z = map.getZoom();
-    $('map').classList.toggle('show-names', z >= 0);
     Object.keys(entries).forEach(function (id) {
       var e = entries[id], g = catGroups[e.cat.id];
       var on = catEnabled[e.cat.id] && z >= (e.cat.minZoom == null ? cfg.minZoom : e.cat.minZoom) && !hiddenMarkers[id];
       if (on) g.pins.addLayer(e.layer); else g.pins.removeLayer(e.layer);
+
       if (e.area) { if (catEnabled[e.cat.id]) g.areas.addLayer(e.area); else g.areas.removeLayer(e.area); }
     });
     Object.keys(catGroups).forEach(function (cid) {
@@ -168,6 +180,12 @@
         if (!on && map.hasLayer(grp)) map.removeLayer(grp);
       });
     });
+    // nomes dos pins aparecem a partir de um zoom por categoria (namesZoom)
+    Object.keys(entries).forEach(function (id) {
+      var e = entries[id], el = e.layer.getElement && e.layer.getElement();
+      var nm = el && el.querySelector('.pin-name');
+      if (nm) nm.style.display = z >= (e.cat.namesZoom == null ? 3 : e.cat.namesZoom) ? 'block' : 'none';
+    });
   }
 
   function focusMarker(id, openPopup) {
@@ -175,7 +193,7 @@
     delete hiddenMarkers[id]; save(HIDDEN_KEY, hiddenMarkers);
     if (!catEnabled[e.cat.id]) { catEnabled[e.cat.id] = true; persistCats(); syncFilterBoxes(); }
     var minZ = e.cat.minZoom == null ? cfg.minZoom : e.cat.minZoom;
-    var z = Math.max(map.getZoom(), minZ, 0);
+    var z = Math.max(map.getZoom(), minZ);
     z = Math.min(z, cfg.maxZoom);
     map.setView(e.layer.getLatLng(), z, { animate: true });
     refresh();
@@ -285,7 +303,7 @@
     clearTimeout(hashTimer);
     var run = function () {
       var c = map.getCenter();
-      var h = '#x=' + Math.round(c.lng) + '&y=' + Math.round(H - c.lat) + '&z=' + map.getZoom() +
+      var h = '#x=' + Math.round(c.lng) + '&y=' + Math.round(-c.lat) + '&z=' + map.getZoom() +
               (currentMarker ? '&m=' + encodeURIComponent(currentMarker) : '');
       history.replaceState(null, '', location.pathname + location.search + h);
     };
@@ -319,7 +337,7 @@
   function enableEditMode() {
     toast('Modo edição: clique no mapa para copiar x e y');
     map.on('click', function (ev) {
-      var x = Math.round(ev.latlng.lng), y = Math.round(H - ev.latlng.lat);
+      var x = Math.round(ev.latlng.lng), y = Math.round(-ev.latlng.lat);
       var snippet = '"x": ' + x + ', "y": ' + y;
       copy(snippet).then(function (ok) {
         L.popup().setLatLng(ev.latlng)

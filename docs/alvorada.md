@@ -1,3 +1,0 @@
-# alvorada
-
-Documento de exemplo.
