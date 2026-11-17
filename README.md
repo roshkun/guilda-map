@@ -36,6 +36,8 @@ Edite `data/markers.json`. Cada item:
 ```
 - `x`/`y`: pixels da imagem original (8192×8192), origem no canto superior esquerdo.
 - `category`: um `id` de `config.json` (country, duchy, capital, city, town, fort, ruin, temple, poi, pin).
+- `description`: texto resumido exibido no popup.
+- `image`: caminho/URL da imagem do popup (ex.: `assets/images/alvorada.jpg`); `imageRatio`: `"16:9"` (padrão) ou `"1:1"`. A imagem é recortada (cover) para caber na proporção; use ~800×450 (16:9) ou ~600×600 (1:1).
 - `icon`, `aliases`, `docs`, `area` (polígono tracejado de fronteira) são opcionais.
 - `docs[].url` pode ser um arquivo em `docs/`, Google Docs, Notion, PDF ou qualquer link.
 

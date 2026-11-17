@@ -149,8 +149,10 @@
   "name": "Aurorium",
   "x": 3645,
   "y": 3508,
-  "description": "",
-  "docs": []
+  "description": "Texto resumido de exemplo: escreva aqui um parágrafo curto sobre o lugar. Imagem 16:9.",
+  "docs": [],
+  "image": "assets/images/aurorium.jpg",
+  "imageRatio": "16:9"
  },
  {
   "id": "capital-barcelaga",
@@ -788,8 +790,10 @@
   "name": "Lágrima de Savras",
   "x": 2931,
   "y": 3132,
-  "description": "",
-  "docs": []
+  "description": "Texto resumido de exemplo para uma imagem quadrada (1:1).",
+  "docs": [],
+  "image": "assets/images/lagrima-de-savras.jpg",
+  "imageRatio": "1:1"
  },
  {
   "id": "city-manarat-al-fajr",

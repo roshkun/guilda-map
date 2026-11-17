@@ -77,7 +77,11 @@ body:not(.sidebar-closed) .leaflet-top.leaflet-left .leaflet-control-zoom{margin
 .leaflet-popup-content{margin:14px 16px;min-width:200px}
 .popup h3{margin:0 0 2px;font-size:1.05rem;color:var(--accent)}
 .popup .cat{font-size:.72rem;text-transform:uppercase;letter-spacing:.08em;color:var(--muted)}
-.popup p{margin:8px 0}
+.popup p{margin:8px 0;line-height:1.45}
+.popup.has-img{width:272px}
+.popup-img{display:block;width:100%;height:auto;object-fit:cover;border-radius:8px;margin:8px 0 4px;background:#0004}
+.popup-img.r-16-9{aspect-ratio:16/9}
+.popup-img.r-1-1{aspect-ratio:1/1}
 .popup ul{margin:8px 0 0;padding:0;list-style:none}
 .popup li{margin:4px 0}
 .popup a{color:#8ec9ff;text-decoration:none}

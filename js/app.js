@@ -132,7 +132,7 @@
       });
     }
     var layer = L.marker(toLatLng(m.x, m.y), { icon: icon, keyboard: true, title: m.name, riseOnHover: true });
-    layer.bindPopup(function () { return popupHtml(m, cat); }, { maxWidth: 320 });
+    layer.bindPopup(function () { return popupHtml(m, cat); }, { maxWidth: 320, minWidth: 240 });
     layer.on('click', function () { setMarkerInHash(m.id); });
     layer.on('contextmenu', function () { hideMarker(m.id); });
     layer.on('popupclose', function () { setMarkerInHash(null); });
@@ -150,8 +150,14 @@
     var docs = (m.docs || []).map(function (d) {
       return '<li>📄 <a href="' + esc(safeUrl(d.url)) + '" target="_blank" rel="noopener">' + esc(d.title) + '</a></li>';
     }).join('');
-    return '<div class="popup"><div class="cat">' + esc(cat.icon) + ' ' + esc(cat.name) + '</div>' +
-      '<h3>' + esc(m.name) + '</h3>' +
+    var img = '';
+    if (m.image) {
+      var ratio = m.imageRatio === '1:1' ? 'r-1-1' : 'r-16-9';
+      img = '<img class="popup-img ' + ratio + '" src="' + esc(safeUrl(m.image)) + '" alt="' + esc(m.name) +
+            '" loading="lazy" onerror="this.style.display=\'none\'">';
+    }
+    return '<div class="popup' + (m.image ? ' has-img' : '') + '"><div class="cat">' + esc(cat.icon) + ' ' + esc(cat.name) + '</div>' +
+      '<h3>' + esc(m.name) + '</h3>' + img +
       (m.description ? '<p>' + esc(m.description) + '</p>' : '') +
       (docs ? '<ul>' + docs + '</ul>' : '') +
       (editMode ? '<div class="coords">x: ' + m.x + ', y: ' + m.y + '</div>' : '') + '</div>';
