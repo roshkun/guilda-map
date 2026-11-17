@@ -1,0 +1,48 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Meu Mapa</title>
+  <!-- Leaflet via CDN. Para uso 100% offline, baixe leaflet.css/leaflet.js e aponte para js/vendor/ -->
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+  <button id="sidebar-toggle" aria-label="Abrir/fechar painel">☰</button>
+
+  <aside id="sidebar">
+    <header>
+      <h1 id="title">Meu Mapa</h1>
+      <p id="subtitle"></p>
+    </header>
+
+    <div class="search">
+      <input id="search" type="search" placeholder="Buscar lugar, país, documento…" autocomplete="off">
+      <ul id="results" hidden></ul>
+    </div>
+
+    <section>
+      <div class="section-head">
+        <h2>Camadas</h2>
+        <span>
+          <button id="all-on" class="link">todas</button> ·
+          <button id="all-off" class="link">nenhuma</button>
+        </span>
+      </div>
+      <ul id="filters"></ul>
+    </section>
+
+    <footer>
+      <button id="share">🔗 Copiar link desta vista</button>
+      <small>Clique com o botão direito (ou segure) num pin para ocultá-lo. Adicione <code>?edit</code> à URL para pegar coordenadas.</small>
+    </footer>
+  </aside>
+
+  <div id="map"></div>
+  <div id="toast" hidden></div>
+
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+  <script src="js/app.js"></script>
+</body>
+</html>

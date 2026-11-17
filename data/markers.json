@@ -1,0 +1,88 @@
+[
+  {
+    "id": "reino-aurea",
+    "category": "country",
+    "name": "Reino de Áurea",
+    "x": 800, "y": 780,
+    "description": "O maior reino do continente ocidental.",
+    "aliases": ["Aurea"],
+    "docs": [{ "title": "História de Áurea", "url": "docs/aurea.md" }],
+    "area": [[480,620],[720,480],[1050,560],[1150,850],[900,1100],[560,1000]]
+  },
+  {
+    "id": "imperio-valdor",
+    "category": "country",
+    "name": "Império de Valdor",
+    "x": 1500, "y": 680,
+    "description": "Potência militar do leste.",
+    "docs": [{ "title": "Linha do tempo do Império", "url": "docs/valdor.md" }]
+  },
+  {
+    "id": "ducado-serra",
+    "category": "duchy",
+    "name": "Ducado da Serra",
+    "x": 900, "y": 640,
+    "description": "Ducado montanhoso ao norte de Áurea, governado pela Casa Serrano.",
+    "docs": [{ "title": "Casa Serrano", "url": "docs/casa-serrano.md" }]
+  },
+  {
+    "id": "ducado-mar",
+    "category": "duchy",
+    "name": "Ducado do Mar Cinzento",
+    "x": 1300, "y": 1150,
+    "description": "Ducado costeiro, conhecido pelos portos.",
+    "docs": []
+  },
+  {
+    "id": "cidade-alvorada",
+    "category": "city",
+    "name": "Alvorada",
+    "x": 820, "y": 800,
+    "description": "Capital de Áurea.",
+    "aliases": ["Capital de Áurea"],
+    "docs": [
+      { "title": "Guia de Alvorada", "url": "docs/alvorada.md" },
+      { "title": "Mapa da cidade (PDF)", "url": "https://example.com/alvorada.pdf" }
+    ]
+  },
+  {
+    "id": "cidade-valdoria",
+    "category": "city",
+    "name": "Valdória",
+    "x": 1520, "y": 720,
+    "description": "Capital do Império de Valdor.",
+    "docs": []
+  },
+  {
+    "id": "vila-pedralta",
+    "category": "town",
+    "name": "Pedralta",
+    "x": 930, "y": 700,
+    "description": "Vila mineradora na Serra.",
+    "docs": []
+  },
+  {
+    "id": "vila-portonovo",
+    "category": "town",
+    "name": "Porto Novo",
+    "x": 1260, "y": 1200,
+    "description": "Principal porto do Mar Cinzento.",
+    "docs": []
+  },
+  {
+    "id": "poi-torre",
+    "category": "poi",
+    "name": "Torre do Vigia",
+    "x": 1050, "y": 560,
+    "description": "Ruína antiga com vista para toda a fronteira.",
+    "docs": [{ "title": "Lenda da Torre", "url": "docs/torre.md" }]
+  },
+  {
+    "id": "pin-acampamento",
+    "category": "pin",
+    "name": "Acampamento dos viajantes",
+    "x": 1180, "y": 900,
+    "description": "Anotação pessoal: onde o grupo parou na terceira sessão.",
+    "docs": []
+  }
+]

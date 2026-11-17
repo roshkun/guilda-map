@@ -1,0 +1,18 @@
+{
+  "title": "Meu Mapa",
+  "subtitle": "Atlas do meu mundo",
+  "image": "assets/mapa.jpg",
+  "width": 2400,
+  "height": 1600,
+  "minZoom": -2,
+  "maxZoom": 2,
+  "initialView": { "x": 1200, "y": 800, "zoom": -1 },
+  "categories": [
+    { "id": "country", "name": "Países",             "icon": "👑", "color": "#e0b341", "style": "label-xl", "minZoom": -2, "visible": true },
+    { "id": "duchy",   "name": "Ducados",            "icon": "🛡️", "color": "#c97b5a", "style": "label-lg", "minZoom": -1, "visible": true },
+    { "id": "city",    "name": "Cidades",            "icon": "🏰", "color": "#e8e8e8", "style": "pin",      "minZoom": -1, "visible": true },
+    { "id": "town",    "name": "Vilas",              "icon": "🏘️", "color": "#b9d48a", "style": "pin",      "minZoom": 0,  "visible": true },
+    { "id": "poi",     "name": "Pontos de interesse","icon": "⭐", "color": "#7fc4f0", "style": "pin",      "minZoom": 0,  "visible": true },
+    { "id": "pin",     "name": "Meus pins",          "icon": "📍", "color": "#f06d6d", "style": "pin",      "minZoom": -2, "visible": true }
+  ]
+}
