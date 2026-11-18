@@ -148,9 +148,9 @@
       }
     },
     "hoursPerDay": {
-      "foot": 8,
-      "horse": 10,
-      "cart": 10
+      "foot": 12,
+      "horse": 12,
+      "cart": 12
     },
     "train": {
       "name": "Ferroáurea",

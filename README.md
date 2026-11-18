@@ -77,4 +77,4 @@ Parâmetros de porto/faixa costeira estão no topo de `tools/build_water.py`; o 
 
 ### Velocidades e regras (`data/config.json` → `travel`)
 
-Todas as velocidades (km/h), esperas de embarque, horas de caminhada por dia, estações do Aeronau (`"capitals"` ou lista de ids) e correnteza dos rios são **valores provisórios** — ajuste à vontade. Escala: 0,4795 km/px (barra do mapa).
+Todas as velocidades (km/h), limite de 12 h de deslocamento por dia a pé/cavalo/carroça (o resto é descanso), esperas de embarque, horas de caminhada por dia, estações do Aeronau (`"capitals"` ou lista de ids) e correnteza dos rios são **valores provisórios** — ajuste à vontade. Escala: 0,4795 km/px (barra do mapa).

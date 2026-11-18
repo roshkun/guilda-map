@@ -251,8 +251,10 @@
     });
     segs = segs.filter(function (s) { return s.type === 'wait' || s.km > 0; });
     var hpd = cfgT.hoursPerDay[o.base] || 8;
-    var days = groundH / hpd + (totH - groundH) / 24;
-    return { hours: totH, km: totKm, groundH: groundH, days: days, segs: segs };
+    // a pé / cavalo / carroça: no máximo hpd horas de deslocamento por dia; o resto do dia é descanso (pernoite)
+    var nights = Math.max(0, Math.ceil(groundH / hpd - 1e-9) - 1);
+    var elapsed = totH + nights * (24 - hpd);
+    return { hours: totH, elapsed: elapsed, nights: nights, km: totKm, groundH: groundH, days: elapsed / 24, segs: segs };
   }
 
   /* ---------- formatação ---------- */
@@ -264,7 +266,7 @@
   }
   function fmtShort(r) {
     if (!r) return '—';
-    return r.days < 1 ? fmtDur(r.hours) : (r.days.toFixed(1).replace('.', ',') + ' d');
+    return r.days < 1 ? fmtDur(r.elapsed) : (r.days.toFixed(1).replace('.', ',') + ' d');
   }
   function fmtDays(d) { return d < 1 ? 'menos de 1 dia' : d.toFixed(1).replace('.', ',') + (d >= 1.95 ? ' dias' : ' dia'); }
   function fmtKm(km) { return Math.round(km).toLocaleString('pt-BR') + ' km'; }
@@ -288,7 +290,8 @@
         'Tente outro modo ou ative Ferroáurea/Aeronau.</p>';
     } else {
       drawRoute(r, fit);
-      html += '<div class="rt-summary"><b>' + fmtDays(r.days) + '</b> <span>· ' + fmtKm(r.km) + ' · ' + fmtDur(r.hours) + ' de percurso</span></div>';
+      html += '<div class="rt-summary"><b>' + fmtDays(r.days) + '</b> <span>· ' + fmtKm(r.km) + ' · ' + fmtDur(r.hours) + ' em movimento' +
+        (r.nights ? ' · ' + r.nights + (r.nights > 1 ? ' pernoites' : ' pernoite') + ' (descanso)' : '') + '</span></div>';
       html += '<ol class="rt-legs">' + r.segs.map(function (s) {
         if (s.type === 'wait') return '<li class="wait">' + LEG_ICON.wait + ' Espera para embarcar (' + WAIT_NAME[s.mode] + ') em ' + esc(s.at) + ' · ' + fmtDur(s.h) + '</li>';
         var title = LEG_ICON[s.type] + ' <b>' + LEG_NAME[s.type] + (s.type === 'river' ? (s.flow > 0 ? ' (descendo)' : s.flow < 0 ? ' (subindo)' : '') : '') + '</b>' + (s.from ? ': ' + esc(s.from) + ' → ' + esc(s.to || '') : '');
@@ -318,8 +321,8 @@
       }).join('') + '</tr>';
     }).join('');
     return '<table class="rt-table"><thead><tr><th></th>' + COLS.map(function (c) { return '<th>' + c.label + '</th>'; }).join('') + '</tr></thead><tbody>' + rows + '</tbody></table>' +
-      '<small class="rt-note">★ = mais rápido. Dias contam ' + MODES.map(function (m) { return (cfgT.hoursPerDay[m] || 8) + ' h/dia ' + cfgT.speeds[m].label.toLowerCase(); }).join(', ') +
-      '; trem, Aeronau e barcos contam 24 h/dia.</small>';
+      '<small class="rt-note">★ = mais rápido. Limite por dia: ' + MODES.map(function (m) { return (cfgT.hoursPerDay[m] || 8) + ' h/dia ' + cfgT.speeds[m].label.toLowerCase(); }).join(', ') +
+      '; trem, Aeronau e barcos viajam 24 h/dia. O resto do dia a pé/cavalo/carroça é descanso.</small>';
   }
 
   function clearLayer() { if (layer) { api.map.removeLayer(layer); layer = null; } }
