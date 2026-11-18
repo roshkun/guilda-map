@@ -111,8 +111,8 @@
   "id": "town-arroio-da-fonte",
   "category": "town",
   "name": "Arroio da Fonte",
-  "x": 3355,
-  "y": 3971,
+  "x": 3357,
+  "y": 4002,
   "description": "",
   "docs": []
  },
@@ -356,8 +356,8 @@
   "id": "poi-correndevento",
   "category": "poi",
   "name": "Correndevento",
-  "x": 5105,
-  "y": 3998,
+  "x": 5104,
+  "y": 4027,
   "description": "",
   "docs": []
  },
@@ -907,8 +907,8 @@
   "id": "town-negromonte",
   "category": "town",
   "name": "Negromonte",
-  "x": 4836,
-  "y": 3991,
+  "x": 4837,
+  "y": 4020,
   "description": "",
   "docs": []
  },
@@ -925,8 +925,8 @@
   "id": "city-norxalia",
   "category": "city",
   "name": "Norxalia",
-  "x": 6001,
-  "y": 4014,
+  "x": 5999,
+  "y": 4043,
   "description": "",
   "docs": []
  },
