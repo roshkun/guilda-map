@@ -112,7 +112,7 @@
     },
     {
       "id": "pin",
-      "name": "Meus pins",
+      "name": "Pins avulsos",
       "icon": "📍",
       "color": "#f06d6d",
       "style": "pin",

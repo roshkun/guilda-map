@@ -63,7 +63,7 @@
       onAdd: function () {
         var d = L.DomUtil.create('div', 'map-tools');
         [['📏', 'Medir distância (M)', toggleRuler], ['📍', 'Adicionar pin', startAddPin], ['❔', 'Ajuda (?)', toggleHelp]].forEach(function (b) {
-          var a = L.DomUtil.create('button', '', b[0]); a.title = b[1]; a.setAttribute('aria-label', b[1]);
+          var a = L.DomUtil.create('button', ''); a.textContent = b[0]; a.title = b[1]; a.setAttribute('aria-label', b[1]);
           L.DomEvent.on(a, 'click', function (ev) { L.DomEvent.stop(ev); b[2](); });
           d.appendChild(a);
         });

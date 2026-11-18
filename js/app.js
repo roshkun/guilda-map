@@ -55,8 +55,8 @@
     var ld0 = document.getElementById('loading'); if (ld0) ld0.hidden = true;
     document.body.insertAdjacentHTML('beforeend',
       '<p style="position:fixed;inset:40% 10% auto;z-index:3000;background:#400;padding:16px;border-radius:8px">' +
-      'Não consegui carregar os dados. Abra o projeto por um servidor local ' +
-      '(ex.: <code>python3 -m http.server</code>), não direto pelo arquivo.</p>');
+      'Erro ao iniciar o mapa: ' + esc(err && err.message || err) + '. Se abriu o arquivo direto, use um servidor local ' +
+      '(ex.: <code>python3 -m http.server</code>).</p>');
   });
 
   /* ---------- inicialização ---------- */
