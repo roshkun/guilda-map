@@ -17,6 +17,7 @@
   var STYLE = {
     road:  { color: '#f0c85a', weight: 4, opacity: 0.95 },
     trail: { color: '#d98a5a', weight: 4, opacity: 0.95, dashArray: '6 6' },
+    bank:  { color: '#59b7c9', weight: 3, opacity: 0.95, dashArray: '4 6' },
     off:   { color: '#b8b8b8', weight: 3, opacity: 0.9, dashArray: '2 8' },
     train: { color: '#ffffff', weight: 5, opacity: 0.95, dashArray: '12 5 2 5' },
     air:   { color: '#6fd3ff', weight: 4, opacity: 0.95, dashArray: '3 9' },
@@ -25,8 +26,8 @@
     sea_l: { color: '#7a5cff', weight: 5, opacity: 0.95, dashArray: '14 6' }
   };
   var LEG_NAME = { road: 'Estrada', trail: 'Trilha', off: 'Fora de trilha', train: 'Ferroáurea', air: 'Aeronau',
-                   river: 'Rio', sea_s: 'Barco pequeno (costa)', sea_l: 'Navio grande' };
-  var LEG_ICON = { road: '🛤️', trail: '🥾', off: '🌿', train: '🚂', air: '🎈', river: '🛶', sea_s: '⛵', sea_l: '🚢', wait: '⏳' };
+                   bank: 'Margem do rio', river: 'Rio', sea_s: 'Barco pequeno (costa)', sea_l: 'Navio grande' };
+  var LEG_ICON = { road: '🛤️', trail: '🥾', off: '🌿', train: '🚂', air: '🎈', bank: '🏞️', river: '🛶', sea_s: '⛵', sea_l: '🚢', wait: '⏳' };
   var WAIT_NAME = { train: 'Ferroáurea', air: 'Aeronau', boat: 'barco pequeno', ship: 'navio' };
 
   function $(id) { return document.getElementById(id); }
@@ -98,12 +99,26 @@
     }
 
     // água: rios + costa (barco pequeno) e mar aberto (navio grande)
-    var boatPts = {}, shipPts = {};
+    var boatPts = {}, shipPts = {}, bb = 0, bankBase = 0, riverSet = {};
     if (water) {
-      var bb = adj.length;
+      bb = adj.length;
       water.boat.nodes.forEach(addNode);
       water.boat.edges.forEach(function (e) {
         link(bb + e[0], bb + e[1], e[3] === 1 ? 'sea_s' : 'river', e[2] * kmPx, e[4], e[3] === 1 ? 0 : e[5]);
+      });
+      // margens dos rios: dá para caminhar/cavalgar ao longo do rio (nós próprios, sem exigir barco)
+      water.boat.edges.forEach(function (e) { if (e[3] === 0) { riverSet[e[0]] = 1; riverSet[e[1]] = 1; } });
+      bankBase = adj.length;
+      water.boat.nodes.forEach(addNode);
+      water.boat.edges.forEach(function (e) {
+        if (e[3] === 0) link(bankBase + e[0], bankBase + e[1], 'bank', e[2] * kmPx, e[4], 0);
+      });
+      Object.keys(riverSet).forEach(function (k) {                // margem encontra estrada/trilha por perto
+        var p = water.boat.nodes[k], n = nearest(p[0], p[1], false);
+        if (n && n.d <= (cfgT.bankLinkPx || 50)) {
+          var q = gNodes[n.i];
+          link(bankBase + +k, n.i, 'off', n.d * kmPx * detour, [p[0], p[1], q[0], q[1]], 0);
+        }
       });
       Object.keys(water.boat.points).forEach(function (id) {
         boatPts[id] = water.boat.points[id].map(function (n) { return bb + n; });
@@ -128,6 +143,7 @@
         adj[h].push({ to: gN + t, type: 'board', mode: 'train', id: id });
         adj[gN + t].push({ to: h, type: 'alight', id: id });
       }
+      (boatPts[id] || []).forEach(function (n) { if (riverSet[n - bb]) link(h, bankBase + (n - bb), 'link', 0, null); });
       [[boatPts[id], 'boat'], [shipPts[id], 'ship']].forEach(function (bp) {
         (bp[0] || []).forEach(function (n) {
           adj[h].push({ to: n, type: 'board', mode: bp[1], id: id });
@@ -165,7 +181,7 @@
   /* ---------- custo e Dijkstra ---------- */
   function cost(e, o) {
     switch (e.type) {
-      case 'road': case 'trail': case 'off':
+      case 'road': case 'trail': case 'off': case 'bank':
         var sp = cfgT.speeds[o.base][e.type]; return sp ? e.km / sp : Infinity;
       case 'train': return o.train ? e.km / cfgT.train.speedKmh : Infinity;
       case 'air': return o.air ? e.km / cfgT.aeronau.speedKmh : Infinity;
@@ -224,7 +240,7 @@
     path.forEach(function (st) {
       var e = st.e, h = cost(e, o);
       totH += h;
-      if (e.type === 'road' || e.type === 'trail' || e.type === 'off') {
+      if (e.type === 'road' || e.type === 'trail' || e.type === 'off' || e.type === 'bank') {
         var s = seg(e.type); s.km += e.km; s.h += h; s.pts = s.pts.concat(orient(e)); groundH += h; totKm += e.km;
         (nodeMarkers[st.to] || []).forEach(function (id) { s.via.push(id); });
       } else if (e.type === 'river' || e.type === 'sea_s' || e.type === 'sea_l' || e.type === 'train' || e.type === 'air') {

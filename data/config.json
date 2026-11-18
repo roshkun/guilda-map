@@ -130,21 +130,24 @@
         "icon": "🥾",
         "road": 4.5,
         "trail": 3.5,
-        "off": 2.5
+        "off": 2.5,
+        "bank": 3.5
       },
       "horse": {
         "label": "A cavalo",
         "icon": "🐎",
         "road": 10,
         "trail": 7,
-        "off": 4
+        "off": 4,
+        "bank": 6
       },
       "cart": {
         "label": "Carroça",
         "icon": "🛒",
         "road": 5,
         "trail": 2.5,
-        "off": 1.5
+        "off": 1.5,
+        "bank": 2
       }
     },
     "hoursPerDay": {

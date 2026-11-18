@@ -62,7 +62,7 @@ Painel **Rotas e viagens** (barra lateral, ou "Sair daqui / Chegar aqui" no popu
 
 - Origem → destino a pé, a cavalo ou de carroça, combinados (opcionalmente) com **Ferroáurea**, **Aeronau**, **barco pequeno** (costa + rios) e **navio grande** (mar aberto).
 - Tabela comparativa (3 modos × 5 combinações); clique numa célula para desenhar aquela rota. ★ marca a mais rápida.
-- Rios: descer é mais rápido que subir (correnteza). O link compartilhável inclui a rota (`#r=origem,destino&b=modo&t=1&a=1&w=3`).
+- Rios: descer é mais rápido que subir (correnteza); a pé/cavalo também dá para seguir a margem do rio. O link compartilhável inclui a rota (`#r=origem,destino&b=modo&t=1&a=1&w=3`).
 
 ### Dados gerados (tools/)
 
