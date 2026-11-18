@@ -54,10 +54,10 @@ def ocean_mask(im):
 
 def river_mask(im, ocean_full_near):
     R = im[..., 0].astype(np.int16); G = im[..., 1].astype(np.int16); B = im[..., 2].astype(np.int16)
-    riv = (R >= 65) & (R <= 125) & (G - R >= 22) & (G - R <= 70) & (B - R >= 10) & (B - R <= 60) & (np.abs(G - B) <= 25)
+    riv = (R >= 58) & (R <= 130) & (G - R >= 18) & (G - R <= 72) & (B - R >= 8) & (B - R <= 62) & (np.abs(G - B) <= 28)
     riv &= ~ocean_full_near
     n, lab, st, _ = cv2.connectedComponentsWithStats(riv.astype(np.uint8), connectivity=8)
-    small = np.where(st[:, cv2.CC_STAT_AREA] < 60)[0]
+    small = np.where(st[:, cv2.CC_STAT_AREA] < 40)[0]
     riv[np.isin(lab, small)] = False
     return riv
 
@@ -138,8 +138,8 @@ def main():
     riv = river_mask(im, near_sea)
     sk = skeleton_from_mask(riv, close=5, min_area=20)
     rg = trace_graph(sk)
-    collapse_deg2(rg); prune_spurs(rg, min_len=40); drop_small_components(rg, 150)
-    bridge_gaps(rg, radius=60); collapse_deg2(rg)
+    collapse_deg2(rg); prune_spurs(rg, min_len=14); drop_small_components(rg, 70)
+    bridge_gaps(rg, radius=80); collapse_deg2(rg)
     settle = {m['id']: (m['x'], m['y']) for m in markers if m['category'] in SMALL_CATS}
     rn, _ = attach_points(rg, settle, snap=RIVER_SNAP, hub=0)
     rn = {k: v for k, v in rn.items() if v}
