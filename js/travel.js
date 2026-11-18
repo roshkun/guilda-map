@@ -408,7 +408,7 @@
       api.map.closePopup();
       openPanel();
       setPlace(b.dataset.route === 'from' ? 'from' : 'to', b.dataset.id, true);
-    });
+    }, true);   // captura: o Leaflet interrompe a propagação de cliques dentro do popup
     $('rt-train-label').title = 'Ferroáurea: ferrovia branca tracejada em Picoáureo (' + cfgT.train.speedKmh + ' km/h)';
     $('rt-air-label').title = 'Aeronau: liga as capitais em linha reta (' + cfgT.aeronau.speedKmh + ' km/h)';
   }
