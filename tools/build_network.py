@@ -55,7 +55,26 @@ def road_graph(im):
     for d in g.edges.values():
         p = np.array(d['path']); L = lab_d[p[:, 1], p[:, 0]]; L = L[L > 0]
         d['kind'] = 1 if (len(L) >= 4 and (area[L] < 40).mean() > 0.6) else 0
+    # deserto: todo caminho dentro do grande deserto (areia) é trilha, mesmo desenhado como estrada
+    desert = desert_mask(im)
+    for d in g.edges.values():
+        if d['kind'] == 0:
+            p = np.array(d['path'])
+            if desert[p[:, 1] // 8, p[:, 0] // 8].mean() >= 0.6:
+                d['kind'] = 1
     return g
+
+
+def desert_mask(im):
+    """Máscara (1/8 da resolução) do maior deserto contínuo: cor de areia suavizada, maior componente."""
+    small = cv2.resize(im, (im.shape[1] // 8, im.shape[0] // 8), interpolation=cv2.INTER_AREA)
+    bl = cv2.blur(small, (5, 5)).astype(np.int16)
+    R, G, B = bl[..., 0], bl[..., 1], bl[..., 2]
+    sand = ((R > 160) & (R - B > 42) & (R - G < 42) & (G - B > 25) & (G > 140)).astype(np.uint8)
+    sand = cv2.morphologyEx(sand, cv2.MORPH_OPEN, cv2.getStructuringElement(cv2.MORPH_ELLIPSE, (25, 25)))
+    n, lab, st, _ = cv2.connectedComponentsWithStats(sand, connectivity=8)
+    big = 1 + int(np.argmax(st[1:, cv2.CC_STAT_AREA]))
+    return lab == big
 
 
 def train_cost(im):
