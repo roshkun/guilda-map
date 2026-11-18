@@ -161,12 +161,7 @@
       "speedKmh": 50,
       "waitHours": 1
     },
-    "aeronau": {
-      "name": "Aeronau",
-      "speedKmh": 40,
-      "waitHours": 2,
-      "stations": "capitals"
-    },
+    "aeronau": {"name": "Aeronau", "speedKmh": 40, "waitHours": 2, "stations": ["capital-altamare", "capital-aurelia-magna", "capital-aurorium", "capital-barcelaga", "capital-durand", "capital-lagrima-de-savras", "capital-olivideira", "capital-podmo-bihari", "capital-shuplaishain"], "links": [["capital-aurelia-magna", "capital-durand"], ["capital-durand", "capital-lagrima-de-savras"], ["capital-durand", "capital-aurorium"], ["capital-durand", "capital-olivideira"], ["capital-lagrima-de-savras", "capital-aurorium"], ["capital-aurorium", "capital-olivideira"], ["capital-aurorium", "capital-shuplaishain"], ["capital-olivideira", "capital-shuplaishain"], ["capital-shuplaishain", "capital-altamare"], ["capital-altamare", "capital-barcelaga"], ["capital-aurorium", "capital-barcelaga"], ["capital-barcelaga", "capital-podmo-bihari"]], "noFly": [{"name": "Deserto de Darmir", "polygon": [[3775, 1475], [4300, 1537], [4600, 1500], [5375, 1487], [5900, 1562], [6050, 1750], [6187, 1950], [6275, 2075], [6225, 2750], [5900, 2925], [5525, 3000], [5150, 2925], [4800, 2762], [4475, 2725], [4237, 2675], [4237, 2300], [4025, 2050], [3775, 1825]]}]},
     "offroadMaxKm": 250,
     "offroadDetour": 1.3,
     "boats": {

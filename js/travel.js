@@ -160,22 +160,50 @@
       }
     });
 
-    // Aeronau: grafo completo em linha reta entre as estações (por padrão, todas as capitais)
-    var st = (cfgT.aeronau && cfgT.aeronau.stations) || 'capitals';
-    var ids = st === 'capitals' ? Object.keys(api.entries).filter(function (id) { return api.entries[id].data.category === 'capital'; }) :
-      st.filter(function (id) { return api.entries[id]; });
-    var air = ids.map(function (id) {
+    // Aeronau: rede orgânica entre capitais (com escalas), sem sobrevoar as zonas proibidas (ex.: deserto de Darmir)
+    var ac = cfgT.aeronau || {};
+    var ids = (ac.stations && ac.stations !== 'capitals' ? ac.stations : Object.keys(api.entries).filter(function (id) { return api.entries[id].data.category === 'capital'; }))
+      .filter(function (id) { return api.entries[id]; });
+    var air = {};
+    ids.forEach(function (id) {
       var n = addNode(), h = hubOf[id];
       adj[h].push({ to: n, type: 'board', mode: 'air', id: id });
       adj[n].push({ to: h, type: 'alight', id: id });
       addNM(n, id);
-      return { id: id, n: n, m: api.entries[id].data };
+      air[id] = { id: id, n: n, m: api.entries[id].data };
     });
-    for (var a = 0; a < air.length; a++) for (var b = a + 1; b < air.length; b++) {
-      var A = air[a].m, B = air[b].m;
-      link(air[a].n, air[b].n, 'air', dist(A.x, A.y, B.x, B.y) * kmPx, [A.x, A.y, B.x, B.y]);
-    }
+    var pairs = ac.links || [];
+    if (!pairs.length) for (var a = 0; a < ids.length; a++) for (var b = a + 1; b < ids.length; b++) pairs.push([ids[a], ids[b]]);
+    cfgT._airLinks = pairs.filter(function (pr) {
+      var A = air[pr[0]], B = air[pr[1]];
+      return A && B && !crossesNoFly(A.m, B.m, ac.noFly);
+    });
+    cfgT._airLinks.forEach(function (pr) {
+      var A = air[pr[0]].m, B = air[pr[1]].m;
+      link(air[pr[0]].n, air[pr[1]].n, 'air', dist(A.x, A.y, B.x, B.y) * kmPx, [A.x, A.y, B.x, B.y]);
+    });
     cfgT._airIds = ids;
+  }
+
+  /* segmento A-B cruza (ou termina dentro de) algum polígono proibido? */
+  function crossesNoFly(A, B, zones) {
+    function ccw(p, q, r) { return (r[1] - p[1]) * (q[0] - p[0]) > (q[1] - p[1]) * (r[0] - p[0]); }
+    function inter(p1, p2, q1, q2) { return ccw(p1, q1, q2) !== ccw(p2, q1, q2) && ccw(p1, p2, q1) !== ccw(p1, p2, q2); }
+    function inside(pt, poly) {
+      var c = false;
+      for (var i = 0, j = poly.length - 1; i < poly.length; j = i++) {
+        if ((poly[i][1] > pt[1]) !== (poly[j][1] > pt[1]) &&
+            pt[0] < (poly[j][0] - poly[i][0]) * (pt[1] - poly[i][1]) / (poly[j][1] - poly[i][1]) + poly[i][0]) c = !c;
+      }
+      return c;
+    }
+    var a = [A.x, A.y], b = [B.x, B.y];
+    return (zones || []).some(function (z) {
+      var P = z.polygon;
+      if (inside(a, P) || inside(b, P)) return true;
+      for (var i = 0, j = P.length - 1; i < P.length; j = i++) if (inter(a, b, P[i], P[j])) return true;
+      return false;
+    });
   }
 
   /* ---------- custo e Dijkstra ---------- */
@@ -409,11 +437,10 @@
       defs.push({ id: 'sea_s', label: 'Rotas de barco pequeno', icon: '⛵', style: STYLE.sea_s, lines: sea(water.boat.edges, 1) });
       defs.push({ id: 'sea_l', label: 'Rotas de navio grande', icon: '🚢', style: STYLE.sea_l, lines: sea(water.ship.edges, 2) });
     }
-    var ids = cfgT._airIds || [], air = [];
-    for (var a = 0; a < ids.length; a++) for (var b = a + 1; b < ids.length; b++) {
-      var A = api.entries[ids[a]].data, B = api.entries[ids[b]].data;
-      air.push({ flat: [A.x, A.y, B.x, B.y], km: dist(A.x, A.y, B.x, B.y) * kmPx });
-    }
+    var air = (cfgT._airLinks || []).map(function (pr) {
+      var A = api.entries[pr[0]].data, B = api.entries[pr[1]].data;
+      return { flat: [A.x, A.y, B.x, B.y], km: dist(A.x, A.y, B.x, B.y) * kmPx };
+    });
     if (air.length) defs.push({ id: 'air', label: 'Aeronau (dirigível)', icon: '🎈', style: STYLE.air, lines: air });
 
     var saved = netState(), html = '';
@@ -608,7 +635,7 @@
       else setPlace(b.dataset.route === 'from' ? 'from' : 'to', b.dataset.id, true);
     }, true);   // captura: o Leaflet interrompe a propagação de cliques dentro do popup
     $('rt-train-label').title = 'Ferroáurea: ferrovia branca tracejada em Picoáureo (' + cfgT.train.speedKmh + ' km/h)';
-    $('rt-air-label').title = 'Aeronau: liga as capitais em linha reta (' + cfgT.aeronau.speedKmh + ' km/h)';
+    $('rt-air-label').title = 'Aeronau: rede orgânica entre capitais, com escalas (' + cfgT.aeronau.speedKmh + ' km/h)';
   }
 
   function legText(s) {
