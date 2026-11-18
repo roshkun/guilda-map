@@ -6,22 +6,28 @@
 (function () {
   'use strict';
 
-  var api, cfgT, net, kmPx;
+  var api, cfgT, net, water, kmPx;
   var adj = [], nodeMarkers = {}, hubOf = {}, hubName = {}, gN = 0;
   var layer = null, ready = false;
-  var state = { from: null, to: null, base: 'foot', train: false, air: false };
+  var state = { from: null, to: null, base: 'foot', train: false, air: false, boat: false, ship: false };
   var MODES = ['foot', 'horse', 'cart'];
-  var COLS = [{ t: 0, a: 0, label: 'Só terra' }, { t: 1, a: 0, label: '+ Ferroáurea' },
-              { t: 0, a: 1, label: '+ Aeronau' }, { t: 1, a: 1, label: 'Tudo' }];
+  var COLS = [{ t: 0, a: 0, b: 0, label: 'Só terra' }, { t: 1, a: 0, b: 0, label: '+ Ferro-áurea' },
+              { t: 0, a: 1, b: 0, label: '+ Aeronau' }, { t: 0, a: 0, b: 1, label: '+ Barcos' },
+              { t: 1, a: 1, b: 1, label: 'Tudo' }];
   var STYLE = {
     road:  { color: '#f0c85a', weight: 4, opacity: 0.95 },
     trail: { color: '#d98a5a', weight: 4, opacity: 0.95, dashArray: '6 6' },
     off:   { color: '#b8b8b8', weight: 3, opacity: 0.9, dashArray: '2 8' },
     train: { color: '#ffffff', weight: 5, opacity: 0.95, dashArray: '12 5 2 5' },
-    air:   { color: '#6fd3ff', weight: 4, opacity: 0.95, dashArray: '3 9' }
+    air:   { color: '#6fd3ff', weight: 4, opacity: 0.95, dashArray: '3 9' },
+    river: { color: '#3a8dff', weight: 4, opacity: 0.95 },
+    sea_s: { color: '#38d6c4', weight: 4, opacity: 0.95, dashArray: '8 5' },
+    sea_l: { color: '#7a5cff', weight: 5, opacity: 0.95, dashArray: '14 6' }
   };
-  var LEG_NAME = { road: 'Estrada', trail: 'Trilha', off: 'Fora de trilha', train: 'Ferroáurea', air: 'Aeronau' };
-  var LEG_ICON = { road: '🛤️', trail: '🥾', off: '🌿', train: '🚂', air: '🎈', wait: '⏳' };
+  var LEG_NAME = { road: 'Estrada', trail: 'Trilha', off: 'Fora de trilha', train: 'Ferroáurea', air: 'Aeronau',
+                   river: 'Rio', sea_s: 'Barco pequeno (costa)', sea_l: 'Navio grande' };
+  var LEG_ICON = { road: '🛤️', trail: '🥾', off: '🌿', train: '🚂', air: '🎈', river: '🛶', sea_s: '⛵', sea_l: '🚢', wait: '⏳' };
+  var WAIT_NAME = { train: 'Ferroáurea', air: 'Aeronau', boat: 'barco pequeno', ship: 'navio' };
 
   function $(id) { return document.getElementById(id); }
 
@@ -48,9 +54,9 @@
 
   /* ---------- construção do grafo ---------- */
   function addNode() { adj.push([]); return adj.length - 1; }
-  function link(a, b, type, km, flat) {
-    adj[a].push({ to: b, type: type, km: km, flat: flat, rev: false });
-    adj[b].push({ to: a, type: type, km: km, flat: flat, rev: true });
+  function link(a, b, type, km, flat, flow) {
+    adj[a].push({ to: b, type: type, km: km, flat: flat, rev: false, flow: flow || 0 });
+    adj[b].push({ to: a, type: type, km: km, flat: flat, rev: true, flow: -(flow || 0) });
   }
   function dist(ax, ay, bx, by) { return Math.sqrt((ax - bx) * (ax - bx) + (ay - by) * (ay - by)); }
 
@@ -91,6 +97,27 @@
       return best < 0 ? null : { i: best, d: bd };
     }
 
+    // água: rios + costa (barco pequeno) e mar aberto (navio grande)
+    var boatPts = {}, shipPts = {};
+    if (water) {
+      var bb = adj.length;
+      water.boat.nodes.forEach(addNode);
+      water.boat.edges.forEach(function (e) {
+        link(bb + e[0], bb + e[1], e[3] === 1 ? 'sea_s' : 'river', e[2] * kmPx, e[4], e[3] === 1 ? 0 : e[5]);
+      });
+      Object.keys(water.boat.points).forEach(function (id) {
+        boatPts[id] = water.boat.points[id].map(function (n) { return bb + n; });
+        boatPts[id].forEach(function (n) { addNM(n, id); });
+      });
+      var sb = adj.length;
+      water.ship.nodes.forEach(addNode);
+      water.ship.edges.forEach(function (e) { link(sb + e[0], sb + e[1], 'sea_l', e[2] * kmPx, e[4], 0); });
+      Object.keys(water.ship.points).forEach(function (id) {
+        shipPts[id] = water.ship.points[id].map(function (n) { return sb + n; });
+        shipPts[id].forEach(function (n) { addNM(n, id); });
+      });
+    }
+
     // um hub por lugar
     Object.keys(api.entries).forEach(function (id) {
       var m = api.entries[id].data, h = addNode();
@@ -101,6 +128,12 @@
         adj[h].push({ to: gN + t, type: 'board', mode: 'train', id: id });
         adj[gN + t].push({ to: h, type: 'alight', id: id });
       }
+      [[boatPts[id], 'boat'], [shipPts[id], 'ship']].forEach(function (bp) {
+        (bp[0] || []).forEach(function (n) {
+          adj[h].push({ to: n, type: 'board', mode: bp[1], id: id });
+          adj[n].push({ to: h, type: 'alight', id: id });
+        });
+      });
       if (g == null) {                           // fora das estradas: liga em linha reta ao ponto mais próximo
         var seen = {};
         [nearest(m.x, m.y, false), nearest(m.x, m.y, true)].forEach(function (n) {
@@ -136,8 +169,17 @@
         var sp = cfgT.speeds[o.base][e.type]; return sp ? e.km / sp : Infinity;
       case 'train': return o.train ? e.km / cfgT.train.speedKmh : Infinity;
       case 'air': return o.air ? e.km / cfgT.aeronau.speedKmh : Infinity;
+      case 'river':
+        if (!o.boat) return Infinity;
+        var B = cfgT.boats.small, v = B.riverKmh + (e.flow > 0 ? B.currentKmh : e.flow < 0 ? -B.currentKmh : 0);
+        return e.km / Math.max(v, 1.5);
+      case 'sea_s': return o.boat ? e.km / cfgT.boats.small.speedKmh : Infinity;
+      case 'sea_l': return o.ship ? e.km / cfgT.boats.ship.speedKmh : Infinity;
       case 'board':
-        return e.mode === 'train' ? (o.train ? cfgT.train.waitHours : Infinity) : (o.air ? cfgT.aeronau.waitHours : Infinity);
+        if (e.mode === 'train') return o.train ? cfgT.train.waitHours : Infinity;
+        if (e.mode === 'air') return o.air ? cfgT.aeronau.waitHours : Infinity;
+        if (e.mode === 'boat') return o.boat ? cfgT.boats.small.waitHours : Infinity;
+        return o.ship ? cfgT.boats.ship.waitHours : Infinity;
       default: return 0;
     }
   }
@@ -175,9 +217,9 @@
     if (!path) return null;
     var segs = [], cur = null, totH = 0, totKm = 0, groundH = 0;
     var from = api.entries[fromId].data.name, to = api.entries[toId].data.name;
-    function seg(type) {
-      if (cur && cur.type === type && !cur.closed) return cur;
-      cur = { type: type, km: 0, h: 0, pts: [], via: [] }; segs.push(cur); return cur;
+    function seg(type, flow) {
+      if (cur && cur.type === type && !cur.closed && (type !== 'river' || cur.flow === flow)) return cur;
+      cur = { type: type, flow: flow, km: 0, h: 0, pts: [], via: [] }; segs.push(cur); return cur;
     }
     path.forEach(function (st) {
       var e = st.e, h = cost(e, o);
@@ -185,14 +227,16 @@
       if (e.type === 'road' || e.type === 'trail' || e.type === 'off') {
         var s = seg(e.type); s.km += e.km; s.h += h; s.pts = s.pts.concat(orient(e)); groundH += h; totKm += e.km;
         (nodeMarkers[st.to] || []).forEach(function (id) { s.via.push(id); });
-      } else if (e.type === 'train' || e.type === 'air') {
-        var t = seg(e.type); t.km += e.km; t.h += h; t.pts = t.pts.concat(orient(e)); totKm += e.km;
+      } else if (e.type === 'river' || e.type === 'sea_s' || e.type === 'sea_l' || e.type === 'train' || e.type === 'air') {
+        var t = seg(e.type, e.flow); t.km += e.km; t.h += h; t.pts = t.pts.concat(orient(e)); totKm += e.km;
         (nodeMarkers[st.to] || []).forEach(function (id) { t.via.push(id); });
       } else if (e.type === 'board') {
         segs.push({ type: 'wait', mode: e.mode, at: hubName[hubOf[e.id]], h: h, km: 0, pts: [], via: [] });
-        cur = { type: e.mode, km: 0, h: 0, pts: [], via: [], from: hubName[hubOf[e.id]] }; segs.push(cur);
+        if (e.mode === 'train' || e.mode === 'air') { cur = { type: e.mode, km: 0, h: 0, pts: [], via: [], from: hubName[hubOf[e.id]] }; segs.push(cur); }
+        else cur = null;
       } else if (e.type === 'alight') {
-        if (cur) { cur.to = hubName[hubOf[e.id]]; cur.closed = true; }
+        if (cur && (cur.type === 'train' || cur.type === 'air')) { cur.to = hubName[hubOf[e.id]]; cur.closed = true; }
+        cur = null;
       }
     });
     segs.forEach(function (s) {
@@ -200,7 +244,7 @@
       s.via.forEach(function (id) {
         var m = api.entries[id].data;
         if (m.name === from || m.name === to || m.name === s.from || m.name === s.to || seen[id]) return;
-        if (['capital', 'city', 'town'].indexOf(m.category) < 0) return;
+        if (['capital', 'city', 'town', 'fort'].indexOf(m.category) < 0) return;
         seen[id] = 1; names.push(m.name);
       });
       s.via = names;
@@ -227,7 +271,7 @@
   var esc = function (s) { return api.esc(s); };
 
   /* ---------- cálculo + interface ---------- */
-  function opts() { return { base: state.base, train: !!state.train, air: !!state.air }; }
+  function opts() { return { base: state.base, train: !!state.train, air: !!state.air, boat: !!state.boat, ship: !!state.ship }; }
 
   function update(fit) {
     var out = $('rt-out'); clearLayer();
@@ -246,8 +290,8 @@
       drawRoute(r, fit);
       html += '<div class="rt-summary"><b>' + fmtDays(r.days) + '</b> <span>· ' + fmtKm(r.km) + ' · ' + fmtDur(r.hours) + ' de percurso</span></div>';
       html += '<ol class="rt-legs">' + r.segs.map(function (s) {
-        if (s.type === 'wait') return '<li class="wait">' + LEG_ICON.wait + ' Espera para embarcar (' + (s.mode === 'train' ? 'Ferroáurea' : 'Aeronau') + ') em ' + esc(s.at) + ' · ' + fmtDur(s.h) + '</li>';
-        var title = LEG_ICON[s.type] + ' <b>' + LEG_NAME[s.type] + '</b>' + (s.from ? ': ' + esc(s.from) + ' → ' + esc(s.to || '') : '');
+        if (s.type === 'wait') return '<li class="wait">' + LEG_ICON.wait + ' Espera para embarcar (' + WAIT_NAME[s.mode] + ') em ' + esc(s.at) + ' · ' + fmtDur(s.h) + '</li>';
+        var title = LEG_ICON[s.type] + ' <b>' + LEG_NAME[s.type] + (s.type === 'river' ? (s.flow > 0 ? ' (descendo)' : s.flow < 0 ? ' (subindo)' : '') : '') + '</b>' + (s.from ? ': ' + esc(s.from) + ' → ' + esc(s.to || '') : '');
         return '<li class="' + s.type + '">' + title + '<br><small>' + fmtKm(s.km) + ' · ' + fmtDur(s.h) +
           (s.via.length ? ' · passando por ' + s.via.map(esc).join(', ') : '') + '</small></li>';
       }).join('') + '</ol>';
@@ -260,22 +304,22 @@
     var best = Infinity, cells = [];
     MODES.forEach(function (m) {
       COLS.forEach(function (c) {
-        var r = route(state.from, state.to, { base: m, train: !!c.t, air: !!c.a });
+        var r = route(state.from, state.to, { base: m, train: !!c.t, air: !!c.a, boat: !!c.b, ship: !!c.b });
         cells.push({ m: m, c: c, r: r });
         if (r && r.days < best - 1e-9) best = r.days;
       });
     });
     var rows = MODES.map(function (m) {
       return '<tr><th>' + cfgT.speeds[m].icon + ' ' + esc(cfgT.speeds[m].label) + '</th>' + cells.filter(function (x) { return x.m === m; }).map(function (x) {
-        var sel = state.base === m && !!state.train === !!x.c.t && !!state.air === !!x.c.a;
+        var sel = state.base === m && !!state.train === !!x.c.t && !!state.air === !!x.c.a && !!state.boat === !!x.c.b && !!state.ship === !!x.c.b;
         var isBest = x.r && Math.abs(x.r.days - best) < 1e-9;
-        return '<td><button data-m="' + m + '" data-t="' + x.c.t + '" data-a="' + x.c.a + '" class="' + (sel ? 'sel ' : '') + (isBest ? 'best' : '') + '" ' +
+        return '<td><button data-m="' + m + '" data-t="' + x.c.t + '" data-a="' + x.c.a + '" data-b="' + x.c.b + '" class="' + (sel ? 'sel ' : '') + (isBest ? 'best' : '') + '" ' +
           (x.r ? 'title="' + fmtKm(x.r.km) + ' · ' + fmtDur(x.r.hours) + '"' : 'disabled') + '>' + fmtShort(x.r) + (isBest ? ' ★' : '') + '</button></td>';
       }).join('') + '</tr>';
     }).join('');
     return '<table class="rt-table"><thead><tr><th></th>' + COLS.map(function (c) { return '<th>' + c.label + '</th>'; }).join('') + '</tr></thead><tbody>' + rows + '</tbody></table>' +
       '<small class="rt-note">★ = mais rápido. Dias contam ' + MODES.map(function (m) { return (cfgT.hoursPerDay[m] || 8) + ' h/dia ' + cfgT.speeds[m].label.toLowerCase(); }).join(', ') +
-      '; trem e Aeronau contam 24 h/dia.</small>';
+      '; trem, Aeronau e barcos contam 24 h/dia.</small>';
   }
 
   function clearLayer() { if (layer) { api.map.removeLayer(layer); layer = null; } }
@@ -338,6 +382,7 @@
   function syncControls() {
     var r = document.querySelector('input[name="rt-base"][value="' + state.base + '"]'); if (r) r.checked = true;
     $('rt-train').checked = !!state.train; $('rt-air').checked = !!state.air;
+    $('rt-boat').checked = !!state.boat; $('rt-ship').checked = !!state.ship;
   }
 
   function bindUi() {
@@ -348,11 +393,13 @@
     $('rt-modes').addEventListener('change', function (ev) { state.base = ev.target.value; update(false); });
     $('rt-train').onchange = function () { state.train = this.checked; update(false); };
     $('rt-air').onchange = function () { state.air = this.checked; update(false); };
+    $('rt-boat').onchange = function () { state.boat = this.checked; update(false); };
+    $('rt-ship').onchange = function () { state.ship = this.checked; update(false); };
     $('rt-swap').onclick = function () { var f = state.from, t = state.to; setPlace('from', t, false); setPlace('to', f, false); };
     $('route-clear').onclick = function () { state.from = state.to = null; $('rt-from').value = ''; $('rt-to').value = ''; update(false); };
     $('rt-out').addEventListener('click', function (ev) {
       var b = ev.target.closest('button[data-m]'); if (!b || b.disabled) return;
-      state.base = b.dataset.m; state.train = b.dataset.t === '1'; state.air = b.dataset.a === '1';
+      state.base = b.dataset.m; state.train = b.dataset.t === '1'; state.air = b.dataset.a === '1'; state.boat = state.ship = b.dataset.b === '1';
       syncControls(); update(true);
     });
     // botões dentro dos popups dos pins
@@ -375,7 +422,7 @@
   function extraHash() {
     if (!ready || !state.from || !state.to) return '';
     return '&r=' + encodeURIComponent(state.from) + ',' + encodeURIComponent(state.to) + '&b=' + state.base +
-      (state.train ? '&t=1' : '') + (state.air ? '&a=1' : '');
+      (state.train ? '&t=1' : '') + (state.air ? '&a=1' : '') + ((state.boat ? 1 : 0) + (state.ship ? 2 : 0) ? '&w=' + ((state.boat ? 1 : 0) + (state.ship ? 2 : 0)) : '');
   }
   function readHash() {
     var p = {};
@@ -386,6 +433,7 @@
     var ids = p.r.split(',');
     if (MODES.indexOf(p.b) >= 0) state.base = p.b;
     state.train = p.t === '1'; state.air = p.a === '1';
+    var w = parseInt(p.w, 10) || 0; state.boat = !!(w & 1); state.ship = !!(w & 2);
     syncControls();
     var hasView = isFinite(parseFloat(p.x));
     if (api.entries[ids[0]]) { state.from = ids[0]; $('rt-from').value = api.entries[ids[0]].data.name; }
@@ -399,8 +447,11 @@
       api = a; cfgT = api.cfg.travel;
       var panel = $('route-panel');
       if (!cfgT) { if (panel) panel.hidden = true; return; }
-      fetch('data/network.json').then(function (r) { return r.json(); }).then(function (n) {
-        net = n; build(); ready = true;
+      Promise.all([
+        fetch('data/network.json').then(function (r) { return r.json(); }),
+        fetch('data/water.json').then(function (r) { return r.ok ? r.json() : null; }).catch(function () { return null; })
+      ]).then(function (res) {
+        net = res[0]; water = res[1]; if (water && !cfgT.boats) water = null; build(); ready = true;
         api.extraHash = extraHash;
         bindUi(); readHash();
         update(false);

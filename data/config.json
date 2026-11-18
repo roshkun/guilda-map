@@ -164,6 +164,20 @@
       "stations": "capitals"
     },
     "offroadMaxKm": 250,
-    "offroadDetour": 1.3
+    "offroadDetour": 1.3,
+    "boats": {
+      "small": {
+        "name": "Barco pequeno",
+        "speedKmh": 8,
+        "riverKmh": 6,
+        "currentKmh": 2.5,
+        "waitHours": 1
+      },
+      "ship": {
+        "name": "Navio grande",
+        "speedKmh": 16,
+        "waitHours": 4
+      }
+    }
   }
 }
