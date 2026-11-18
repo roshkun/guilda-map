@@ -111,6 +111,7 @@ def main():
     ap.add_argument('image')
     ap.add_argument('--km-per-px', type=float, default=0.4795)
     ap.add_argument('--debug')
+    ap.add_argument('--station-px', type=float, default=60, help='raio (px) para criar estação em cidades/vilas perto da linha')
     a = ap.parse_args()
     t0 = time.time()
     im = np.array(Image.open(a.image).convert('RGB'))
@@ -139,7 +140,7 @@ def main():
     tree = cKDTree(tp)
     for m in markers:
         if m['category'] in ('capital', 'city', 'town') and m['id'] not in stn:
-            if tree.query([m['x'], m['y']])[0] <= 35:
+            if tree.query([m['x'], m['y']])[0] <= a.station_px:
                 stn[m['id']] = None
     # estações sem nó próprio: encaixa no trajeto
     missing = {k: (pts[k]) for k, v in stn.items() if v is None}
