@@ -89,3 +89,9 @@ Todas as velocidades (km/h), limite de 12 h de deslocamento por dia a pé/cavalo
 - **Popup dos pins**: "Perto daqui", "Copiar link", "Sair daqui / Chegar aqui".
 - **Rotas**: paradas intermediárias (quantas quiser; ordenáveis ou otimizadas automaticamente; botão "➕ Parada" no pin), copiar resumo, imprimir, link da rota e legenda das linhas.
 - **Atalhos**: `/` buscar, `R` rotas, `M` régua, `Esc` fechar, `?` ajuda.
+
+## Resolução do mapa
+
+Os tiles são gerados da imagem de **16384×16384** (`python3 tools/make_tiles.py IMAGEM`), com níveis de zoom 0–6 (zoom 6 = resolução total).
+As coordenadas dos JSON continuam na grade de **8192×8192** (`tiles.unitZoom: 5` em `data/config.json`), então pins, estradas, rios e rotas não mudaram.
+A pirâmide já contém todas as resoluções; não é preciso manter dois mapas.

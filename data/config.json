@@ -3,7 +3,8 @@
   "subtitle": "Atlas do mundo da guilda",
   "tiles": {
     "url": "assets/tiles/{z}/{x}/{y}.webp",
-    "maxNativeZoom": 5
+    "maxNativeZoom": 6,
+    "unitZoom": 5
   },
   "width": 8192,
   "height": 8192,

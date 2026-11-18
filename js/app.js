@@ -76,8 +76,10 @@
     var bounds = L.latLngBounds([[-H, 0], [0, W]]);
     var crs = L.CRS.Simple, tiles = cfg.tiles;
     if (tiles) {
-      // zoom nativo máximo = 1 pixel da imagem por unidade → coordenadas dos JSON = pixels da imagem original
-      crs = L.extend({}, L.CRS.Simple, { transformation: new L.Transformation(1 / Math.pow(2, tiles.maxNativeZoom), 0, -1 / Math.pow(2, tiles.maxNativeZoom), 0) });
+      // unitZoom = zoom em que 1 pixel de tela = 1 unidade das coordenadas dos JSON (grade de 8192).
+      // Os tiles podem ter resolução maior (maxNativeZoom > unitZoom): mais detalhe, mesmas coordenadas.
+      var uz = tiles.unitZoom != null ? tiles.unitZoom : tiles.maxNativeZoom;
+      crs = L.extend({}, L.CRS.Simple, { transformation: new L.Transformation(1 / Math.pow(2, uz), 0, -1 / Math.pow(2, uz), 0) });
     }
     map = L.map('map', {
       crs: crs,

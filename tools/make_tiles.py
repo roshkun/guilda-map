@@ -20,8 +20,11 @@ img = Image.open(src).convert("RGB")
 W, H = img.size
 nz = max(0, math.ceil(math.log2(max(W, H) / T)))      # maior zoom nativo
 full = T * 2 ** nz                                       # lado do nível mais alto
-canvas = Image.new("RGB", (full, full), (0, 0, 0))      # imagem ancorada no canto superior esquerdo
-canvas.paste(img, (0, 0)); del img
+if (W, H) == (full, full):
+    canvas = img                                         # já é potência de 2: sem cópia extra (poupa memória)
+else:
+    canvas = Image.new("RGB", (full, full), (0, 0, 0))  # imagem ancorada no canto superior esquerdo
+    canvas.paste(img, (0, 0)); del img
 
 total = 0
 for z in range(nz, -1, -1):

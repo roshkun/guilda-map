@@ -254,7 +254,7 @@
   window.GuildaTools = {
     init: function (a) {
       api = a; map = api.map; cfg = api.cfg;
-      kmPx = (cfg.travel && cfg.travel.kmPerPx) || kmPx; if (cfg.tiles) maxNative = cfg.tiles.maxNativeZoom;
+      kmPx = (cfg.travel && cfg.travel.kmPerPx) || kmPx; if (cfg.tiles) maxNative = cfg.tiles.unitZoom != null ? cfg.tiles.unitZoom : cfg.tiles.maxNativeZoom;
       initTabs(); initScale(); initMapButtons(); initRuler(); initPins(); initHelp(); initPopupActions();
     },
     fmtKm: fmtKm
