@@ -311,7 +311,7 @@
   function opts() { return { base: state.base, train: !!state.train, air: !!state.air, boat: !!state.boat, ship: !!state.ship }; }
 
   function update(fit) {
-    var out = $('rt-out'); clearLayer();
+    var out = $('rt-out'); clearLayer(); dimNet(false);
     $('route-clear').hidden = !(state.from || state.to || state.stops.length);
     api.writeHash();
     if (!state.from || !state.to) { out.innerHTML = '<p class="rt-hint">Escolha origem e destino (ou use “Sair daqui / Chegar aqui” no pin).</p>'; return; }
@@ -324,7 +324,7 @@
         (state.base === 'cart' ? 'A carroça não passa por todas as trilhas fora de estrada. ' : '') +
         'Tente outro modo ou ative Ferroáurea/Aeronau.</p>';
     } else {
-      drawRoute(r, fit);
+      drawRoute(r, fit); dimNet(true);
       html += '<div class="rt-summary"><b>' + fmtDays(r.days) + '</b> <span>· ' + fmtKm(r.km) + ' · ' + fmtDur(r.hours) + ' em movimento' +
         (r.nights ? ' · ' + r.nights + (r.nights > 1 ? ' pernoites' : ' pernoite') + ' (descanso)' : '') + '</span></div>';
       html += '<ol class="rt-legs">' + r.segs.map(function (s) {
@@ -390,6 +390,87 @@
         paddingTopLeft: [(window.innerWidth > 720 ? 350 : 30), 40], paddingBottomRight: [40, 40], maxZoom: 4, animate: true
       });
     }
+  }
+
+  /* ---------- redes no mapa (filtros): estradas, trilhas, trem, rios, rotas marítimas, Aeronau, estações ---------- */
+  var NET_KEY = 'meumapa.netLayers', netGroups = {}, netBase = {}, netDim = false;
+  function netState() { try { return JSON.parse(localStorage.getItem(NET_KEY)) || {}; } catch (e) { return {}; } }
+  function toLL(flat) { var ll = []; for (var i = 0; i < flat.length; i += 2) ll.push(api.toLatLng(flat[i], flat[i + 1])); return ll; }
+  function buildNetLayers() {
+    var canvas = L.canvas({ padding: 0.4 });
+    var sea = function (arr, kind) { return arr.filter(function (e) { return e[3] === kind; }).map(function (e) { return { flat: e[4], km: e[2] * kmPx }; }); };
+    var defs = [
+      { id: 'road', label: 'Estradas', icon: '🛤️', style: STYLE.road, lines: net.ground.edges.filter(function (e) { return e[3] === 0; }).map(function (e) { return { flat: e[4], km: e[2] * kmPx }; }) },
+      { id: 'trail', label: 'Trilhas', icon: '🥾', style: STYLE.trail, lines: net.ground.edges.filter(function (e) { return e[3] === 1; }).map(function (e) { return { flat: e[4], km: e[2] * kmPx }; }) },
+      { id: 'train', label: 'Ferroáurea (trem)', icon: '🚂', style: STYLE.train, lines: net.train.edges.map(function (e) { return { flat: e[4], km: e[2] * kmPx }; }) }
+    ];
+    if (water) {
+      defs.push({ id: 'river', label: 'Rios', icon: '🛶', style: STYLE.river, lines: sea(water.boat.edges, 0) });
+      defs.push({ id: 'sea_s', label: 'Rotas de barco pequeno', icon: '⛵', style: STYLE.sea_s, lines: sea(water.boat.edges, 1) });
+      defs.push({ id: 'sea_l', label: 'Rotas de navio grande', icon: '🚢', style: STYLE.sea_l, lines: sea(water.ship.edges, 2) });
+    }
+    var ids = cfgT._airIds || [], air = [];
+    for (var a = 0; a < ids.length; a++) for (var b = a + 1; b < ids.length; b++) {
+      var A = api.entries[ids[a]].data, B = api.entries[ids[b]].data;
+      air.push({ flat: [A.x, A.y, B.x, B.y], km: dist(A.x, A.y, B.x, B.y) * kmPx });
+    }
+    if (air.length) defs.push({ id: 'air', label: 'Aeronau (dirigível)', icon: '🎈', style: STYLE.air, lines: air });
+
+    var saved = netState(), html = '';
+    defs.forEach(function (d) {
+      var g = L.layerGroup(), total = 0;
+      d.lines.forEach(function (ln) {
+        total += ln.km;
+        L.polyline(toLL(ln.flat), L.extend({ renderer: canvas, interactive: false, lineCap: 'round' }, d.style, { weight: Math.max(2, d.style.weight - 1), opacity: 0.85 })).addTo(g);
+      });
+      netGroups[d.id] = g; netBase[d.id] = 0.85;
+      html += '<li><label><input type="checkbox" data-net="' + d.id + '"' + (saved[d.id] ? ' checked' : '') + '><span class="swatch" style="background:' + d.style.color + '"></span><span>' +
+        d.icon + ' ' + esc(d.label) + '</span><span class="count">' + (d.id === 'sea_s' || d.id === 'sea_l' || d.id === 'air' ? d.lines.length + ' rotas' : Math.round(total).toLocaleString('pt-BR') + ' km') + '</span></label></li>';
+    });
+    // estações do trem e portos
+    var stG = L.layerGroup(), nSt = 0;
+    var seen = {};
+    function dot(id, color) {
+      if (seen[id + color] || !api.entries[id]) return; seen[id + color] = 1; nSt++;
+      var m = api.entries[id].data;
+      L.circleMarker(api.toLatLng(m.x, m.y), { radius: 5, color: '#000', weight: 1.5, fillColor: color, fillOpacity: 1, bubblingMouseEvents: false })
+        .bindTooltip(m.name + (color === '#ffffff' ? ' · estação' : ' · porto'), { direction: 'top', offset: [0, -4] }).addTo(stG);
+    }
+    Object.keys(net.train.points).forEach(function (id) { dot(id, '#ffffff'); });
+    if (water) {
+      Object.keys(water.ship.points).forEach(function (id) { dot(id, '#38d6c4'); });
+      var rn = {}; water.boat.edges.forEach(function (e) { if (e[3] === 0) { rn[e[0]] = 1; rn[e[1]] = 1; } });
+      Object.keys(water.boat.points).forEach(function (id) {
+        if (water.boat.points[id].some(function (n) { return !rn[n]; })) dot(id, '#38d6c4');
+      });
+    }
+    netGroups.stations = stG;
+    html += '<li><label><input type="checkbox" data-net="stations"' + (saved.stations ? ' checked' : '') + '><span class="swatch" style="background:#fff"></span><span>📍 Estações e portos</span><span class="count">' + nSt + '</span></label></li>';
+
+    $('net-filters').innerHTML = html;
+    $('net-panel').hidden = false;
+    Object.keys(netGroups).forEach(function (k) { if (saved[k]) netGroups[k].addTo(api.map); });
+    $('net-filters').addEventListener('change', function (ev) {
+      var cb = ev.target, k = cb.dataset.net; if (!k) return;
+      if (cb.checked) netGroups[k].addTo(api.map); else api.map.removeLayer(netGroups[k]);
+      var s = netState(); s[k] = cb.checked; try { localStorage.setItem(NET_KEY, JSON.stringify(s)); } catch (e) { /* ignora */ }
+    });
+    $('net-all-on').onclick = function () { setAllNet(true); };
+    $('net-all-off').onclick = function () { setAllNet(false); };
+  }
+  function setAllNet(v) {
+    var s = {};
+    Object.keys(netGroups).forEach(function (k) { s[k] = v; if (v) netGroups[k].addTo(api.map); else api.map.removeLayer(netGroups[k]); });
+    var boxes = document.querySelectorAll('#net-filters input'); for (var i = 0; i < boxes.length; i++) boxes[i].checked = v;
+    try { localStorage.setItem(NET_KEY, JSON.stringify(s)); } catch (e) { /* ignora */ }
+  }
+  // com uma rota ativa, as redes ficam esmaecidas para a rota se destacar
+  function dimNet(on) {
+    if (on === netDim) return; netDim = on;
+    Object.keys(netGroups).forEach(function (k) {
+      if (k === 'stations') return;
+      netGroups[k].eachLayer(function (l) { l.setStyle({ opacity: on ? 0.22 : netBase[k] }); });
+    });
   }
 
   /* ---------- seleção de origem/destino ---------- */
@@ -610,12 +691,12 @@
       var panel = $('route-panel');
       if (!cfgT) { if (panel) panel.hidden = true; return; }
       Promise.all([
-        fetch('data/network.json?v=8').then(function (r) { return r.json(); }),
-        fetch('data/water.json?v=7').then(function (r) { return r.ok ? r.json() : null; }).catch(function () { return null; })
+        fetch('data/network.json?v=9').then(function (r) { return r.json(); }),
+        fetch('data/water.json?v=9').then(function (r) { return r.ok ? r.json() : null; }).catch(function () { return null; })
       ]).then(function (res) {
         net = res[0]; water = res[1]; if (water && !cfgT.boats) water = null; build(); ready = true;
         api.extraHash = extraHash;
-        bindUi(); readHash();
+        bindUi(); buildNetLayers(); readHash();
         update(false);
         if (!state.from) $('rt-out').innerHTML = '<p class="rt-hint">Escolha origem e destino (ou use “Sair daqui / Chegar aqui” no pin).</p>';
       }).catch(function (err) {

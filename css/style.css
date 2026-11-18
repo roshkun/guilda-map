@@ -29,11 +29,11 @@ button.link{background:none;border:0;color:var(--accent);padding:0;font-size:.8r
 #results small{color:var(--muted);margin-left:auto;font-size:.75rem}
 #results .empty{cursor:default;color:var(--muted)}
 
-#filters{list-style:none;margin:0;padding:0}
-#filters label{display:flex;align-items:center;gap:8px;padding:6px 0;cursor:pointer;user-select:none}
-#filters input{accent-color:var(--accent);width:16px;height:16px}
-#filters .count{margin-left:auto;color:var(--muted);font-size:.8rem}
-#filters .swatch{width:10px;height:10px;border-radius:50%;flex:none}
+#filters,#net-filters{list-style:none;margin:0;padding:0}
+#filters label,#net-filters label{display:flex;align-items:center;gap:8px;padding:6px 0;cursor:pointer;user-select:none}
+#filters input,#net-filters input{accent-color:var(--accent);width:16px;height:16px}
+#filters .count,#net-filters .count{margin-left:auto;color:var(--muted);font-size:.8rem}
+#filters .swatch,#net-filters .swatch{width:10px;height:10px;border-radius:50%;flex:none}
 
 #sidebar footer{margin-top:auto;padding:14px 18px 18px;display:flex;flex-direction:column;gap:10px}
 #share{padding:9px;border-radius:var(--radius);border:1px solid #333c47;background:var(--panel-2)}

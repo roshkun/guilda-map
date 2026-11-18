@@ -82,6 +82,7 @@ Todas as velocidades (km/h), limite de 12 h de deslocamento por dia a pé/cavalo
 ## Interface
 
 - **Abas** na barra lateral: Explorar (camadas), Rotas e Ferramentas.
+- **Redes no mapa** (aba Explorar): liga/desliga estradas, trilhas, Ferroáurea, rios, rotas de barco e navio, Aeronau e estações/portos; esmaecem quando há rota ativa.
 - **Escala em km** no canto inferior direito; botões no mapa para régua, novo pin e ajuda.
 - **Régua** (`M`): mede em linha reta e estima tempo a pé/cavalo/carroça.
 - **Meus pins**: botão direito (ou segurar no celular) no mapa; salvos no navegador, com exportar/importar JSON. (Ainda não entram no calculador de rotas.)
