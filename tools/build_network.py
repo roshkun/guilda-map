@@ -57,6 +57,19 @@ def train_cost(im):
     return (1.0 + np.minimum((dt / 3.0) ** 2, 300.0)).astype(np.float32)
 
 
+def smooth_path(pts, sigma=7):
+    """Suaviza o trajeto (gaussiana) mantendo as pontas fixas: tira o zigue-zague de trechos sem linha visível."""
+    from scipy.ndimage import gaussian_filter1d
+    if len(pts) < 12:
+        return pts
+    p = np.array(pts, dtype=np.float64)
+    pad = int(sigma * 3)
+    ext = np.vstack([np.repeat(p[:1], pad, 0), p, np.repeat(p[-1:], pad, 0)])
+    sm = gaussian_filter1d(ext, sigma, axis=0, mode='nearest')[pad:-pad]
+    sm[0], sm[-1] = p[0], p[-1]
+    return [(int(round(x)), int(round(y))) for x, y in sm]
+
+
 def train_graph(cost, chains, markers):
     by_name = {norm(m['name']): m for m in markers}
     g = Graph(); station_node = {}
@@ -89,6 +102,7 @@ def train_graph(cost, chains, markers):
             path, _ = route_through_array(sub, (y0 - by0, x0 - bx0), (y1 - by0, x1 - bx0),
                                           fully_connected=True, geometric=True)
             pts = [(int(c + bx0), int(r + by0)) for r, c in path]
+            pts = smooth_path(pts)
             a = node_for(p0, m0); b = node_for(p1, m1)
             g.add_edge(a, b, pts, 2)
     return g, station_node

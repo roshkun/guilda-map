@@ -610,7 +610,7 @@
       var panel = $('route-panel');
       if (!cfgT) { if (panel) panel.hidden = true; return; }
       Promise.all([
-        fetch('data/network.json?v=7').then(function (r) { return r.json(); }),
+        fetch('data/network.json?v=8').then(function (r) { return r.json(); }),
         fetch('data/water.json?v=7').then(function (r) { return r.ok ? r.json() : null; }).catch(function () { return null; })
       ]).then(function (res) {
         net = res[0]; water = res[1]; if (water && !cfgT.boats) water = null; build(); ready = true;

@@ -1,16 +1,1 @@
-{
-  "_comentario": "Trajeto da Ferroáurea. Cada cadeia é uma lista de paradas em ordem: um NOME de marcador (vira estação) ou um ponto [x, y] em pixels (só guia o traçado, não é estação). O script segue a linha branca do mapa entre um item e o próximo. Depois de editar, rode: python3 tools/build_network.py IMAGEM.png",
-  "chains": [
-    [
-      "Altimar", "Cristalmar", "Lago Verde", "Ventobravo", "Pico Verde", "Vindora", "Cedrovento", "Pedraviva",
-      "Aurorium", "Justafé", "Pico do Falcão", "Douralma", "Nova Cinéria", "Longaço", "Montescama",
-      "Rochadura", "Ferrodente", "Valepétreo", "Encontro do Leito", "Lumiterra", "Negromonte",
-      [5042, 4067], [5117, 4117], [5058, 4187], "Ferrobrilho",
-      [4933, 4208], [4817, 4200], [4717, 4183], [4625, 4183], "Subliga",
-      "Abissala", [4750, 4400], [4833, 4533], "Cavernalta",
-      [4933, 4800], [4917, 4917], [4767, 4958], "Altarocha",
-      "Ventobreve", "Ventos Perdidos", "Aerandir", "Sopro Divino", "Altimar"
-    ],
-    ["Longaço", "Fortaleza de Ferro"]
-  ]
-}
+{"_comentario": "Trajeto da Ferroáurea. Cada cadeia é uma lista de paradas em ordem: um NOME de marcador (vira estação) ou um ponto [x, y] em pixels (só guia o traçado, não é estação). O script segue a linha branca do mapa entre um item e o próximo. Depois de editar, rode: python3 tools/build_network.py IMAGEM.png", "chains": [["Altimar", "Cristalmar", "Lago Verde", "Ventobravo", "Pico Verde", "Vindora", "Cedrovento", "Pedraviva", [3230, 3743], [3223, 3705], [3263, 3677], [3310, 3662], [3360, 3643], [3413, 3627], [3473, 3667], [3527, 3697], [3583, 3687], [3613, 3667], [3620, 3627], [3633, 3580], "Aurorium", "Justafé", "Pico do Falcão", [3820, 3212], [3842, 3190], [3852, 3167], [3855, 3127], [3875, 3092], "Douralma", "Nova Cinéria", "Longaço", "Montescama", "Rochadura", "Ferrodente", "Valepétreo", "Encontro do Leito", "Lumiterra", "Negromonte", [5042, 4067], [5117, 4117], [5058, 4187], "Ferrobrilho", [4933, 4208], [4817, 4200], [4717, 4183], [4625, 4183], "Subliga", "Abissala", [4750, 4400], [4833, 4533], "Cavernalta", [4933, 4800], [4917, 4917], [4767, 4958], "Altarocha", "Ventobreve", "Ventos Perdidos", "Aerandir", "Sopro Divino", "Altimar"], ["Longaço", "Fortaleza de Ferro"]]}
