@@ -28,7 +28,22 @@ def norm(s):
 def road_graph(im):
     R = im[..., 0].astype(np.int16); G = im[..., 1].astype(np.int16); B = im[..., 2].astype(np.int16)
     red = (R > 42) & ((R - np.maximum(G, B)) * 2 >= R)            # vermelho (estradas, túneis e trilhas)
-    sk = skeleton_from_mask(red, close=9, min_area=6)
+    # trilhas pontilhadas: pontos minúsculos (1-6 px) em fileira; o min_area os apagaria, então
+    # os pontos que formam cadeias (>=4 pontos a <=15 px um do outro) são engrossados antes do esqueleto
+    n0, lab0, st0, _ = cv2.connectedComponentsWithStats(red.astype(np.uint8), connectivity=8)
+    small = (st0[:, cv2.CC_STAT_AREA] < 40); small[0] = False
+    dots = small[lab0] & red
+    link = cv2.dilate(dots.astype(np.uint8), cv2.getStructuringElement(cv2.MORPH_ELLIPSE, (15, 15)))
+    nl, ll, sl, _ = cv2.connectedComponentsWithStats(link, connectivity=8)
+    cnt = np.zeros(nl, np.int32)
+    # conta pontos (componentes) por cadeia usando os centróides
+    _, _, _, cen = cv2.connectedComponentsWithStats(dots.astype(np.uint8), connectivity=8)
+    for cxf, cyf in cen[1:]:
+        cnt[ll[int(round(cyf)), int(round(cxf))]] += 1
+    keep = (cnt >= 4); keep[0] = False
+    dots_kept = dots & keep[ll]
+    red_aug = red | (cv2.dilate(dots_kept.astype(np.uint8), np.ones((5, 5), np.uint8)) > 0)
+    sk = skeleton_from_mask(red_aug, close=9, min_area=6)
     g = trace_graph(sk)
     collapse_deg2(g); prune_spurs(g, min_len=25); drop_small_components(g, 40)
     bridge_gaps(g, radius=80); collapse_deg2(g)
