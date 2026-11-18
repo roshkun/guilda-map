@@ -167,7 +167,7 @@
       '<h3>' + esc(m.name) + '</h3>' + img +
       (m.description ? '<p>' + esc(m.description) + '</p>' : '') +
       (docs ? '<ul>' + docs + '</ul>' : '') +
-      (cfg.travel ? '<div class="popup-actions"><button data-route="from" data-id="' + esc(m.id) + '">🧭 Sair daqui</button><button data-route="to" data-id="' + esc(m.id) + '">🏁 Chegar aqui</button></div>' : '') +
+      (cfg.travel ? '<div class="popup-actions"><button data-route="from" data-id="' + esc(m.id) + '">🧭 Sair daqui</button><button data-route="stop" data-id="' + esc(m.id) + '">➕ Parada</button><button data-route="to" data-id="' + esc(m.id) + '">🏁 Chegar aqui</button></div>' : '') +
       '<div class="popup-actions sec"><button data-copylink="' + esc(m.id) + '">🔗 Copiar link</button></div>' + nearbyHtml(m) +
       (editMode ? '<div class="coords">x: ' + m.x + ', y: ' + m.y + '</div>' : '') + '</div>';
   }

@@ -9,7 +9,7 @@
   var api, cfgT, net, water, kmPx;
   var adj = [], nodeMarkers = {}, hubOf = {}, hubName = {}, gN = 0;
   var layer = null, ready = false, last = null;
-  var state = { from: null, to: null, base: 'foot', train: false, air: false, boat: false, ship: false };
+  var state = { from: null, to: null, stops: [], base: 'foot', train: false, air: false, boat: false, ship: false };
   var MODES = ['foot', 'horse', 'cart'];
   var COLS = [{ t: 0, a: 0, b: 0, label: 'Só terra' }, { t: 1, a: 0, b: 0, label: '+ Ferro-áurea' },
               { t: 0, a: 1, b: 0, label: '+ Aeronau' }, { t: 0, a: 0, b: 1, label: '+ Barcos' },
@@ -257,6 +257,25 @@
     return { hours: totH, elapsed: elapsed, nights: nights, km: totKm, groundH: groundH, days: elapsed / 24, segs: segs };
   }
 
+  /* ---------- viagem com paradas: encadeia trechos origem → paradas → destino ---------- */
+  function tripIds() {
+    return [state.from].concat(state.stops.filter(Boolean), [state.to]);
+  }
+  function routeTrip(ids, o) {
+    var legs = [], segs = [], hours = 0, km = 0, groundH = 0;
+    for (var i = 0; i < ids.length - 1; i++) {
+      if (ids[i] === ids[i + 1]) continue;
+      var r = route(ids[i], ids[i + 1], o);
+      if (!r) return null;
+      if (i > 0) segs.push({ type: 'stop', at: api.entries[ids[i]].data.name, h: 0, km: 0, pts: [], via: [] });
+      segs = segs.concat(r.segs); hours += r.hours; km += r.km; groundH += r.groundH; legs.push(r);
+    }
+    var hpd = cfgT.hoursPerDay[o.base] || 12;
+    var nights = Math.max(0, Math.ceil(groundH / hpd - 1e-9) - 1);
+    var elapsed = hours + nights * (24 - hpd);
+    return { hours: hours, elapsed: elapsed, nights: nights, km: km, groundH: groundH, days: elapsed / 24, segs: segs, legs: legs.length };
+  }
+
   /* ---------- formatação ---------- */
   function fmtDur(h) {
     if (h < 1 / 60) return '0 min';
@@ -277,12 +296,12 @@
 
   function update(fit) {
     var out = $('rt-out'); clearLayer();
-    $('route-clear').hidden = !(state.from || state.to);
+    $('route-clear').hidden = !(state.from || state.to || state.stops.length);
     api.writeHash();
     if (!state.from || !state.to) { out.innerHTML = '<p class="rt-hint">Escolha origem e destino (ou use “Sair daqui / Chegar aqui” no pin).</p>'; return; }
-    if (state.from === state.to) { out.innerHTML = '<p class="rt-hint">Origem e destino são o mesmo lugar.</p>'; return; }
+    if (state.from === state.to && !state.stops.filter(Boolean).length) { out.innerHTML = '<p class="rt-hint">Origem e destino são o mesmo lugar.</p>'; return; }
 
-    var r = route(state.from, state.to, opts());
+    var r = routeTrip(tripIds(), opts());
     var html = '';
     if (!r) {
       html += '<p class="rt-warn">Sem caminho com as opções selecionadas. ' +
@@ -293,6 +312,7 @@
       html += '<div class="rt-summary"><b>' + fmtDays(r.days) + '</b> <span>· ' + fmtKm(r.km) + ' · ' + fmtDur(r.hours) + ' em movimento' +
         (r.nights ? ' · ' + r.nights + (r.nights > 1 ? ' pernoites' : ' pernoite') + ' (descanso)' : '') + '</span></div>';
       html += '<ol class="rt-legs">' + r.segs.map(function (s) {
+        if (s.type === 'stop') return '<li class="stop">📍 <b>Parada:</b> ' + esc(s.at) + '</li>';
         if (s.type === 'wait') return '<li class="wait">' + LEG_ICON.wait + ' Espera para embarcar (' + WAIT_NAME[s.mode] + ') em ' + esc(s.at) + ' · ' + fmtDur(s.h) + '</li>';
         var title = LEG_ICON[s.type] + ' <b>' + LEG_NAME[s.type] + (s.type === 'river' ? (s.flow > 0 ? ' (descendo)' : s.flow < 0 ? ' (subindo)' : '') : '') + '</b>' + (s.from ? ': ' + esc(s.from) + ' → ' + esc(s.to || '') : '');
         return '<li class="' + s.type + '">' + title + '<br><small>' + fmtKm(s.km) + ' · ' + fmtDur(s.h) +
@@ -301,7 +321,7 @@
     }
     if (r) {
       last = r;
-      var used = {}; r.segs.forEach(function (s) { if (s.type !== 'wait') used[s.type] = 1; });
+      var used = {}; r.segs.forEach(function (s) { if (s.type !== 'wait' && s.type !== 'stop') used[s.type] = 1; });
       html += '<div class="rt-legend">' + Object.keys(used).map(function (k) {
         return '<span><i style="background:' + STYLE[k].color + '"></i>' + LEG_NAME[k] + '</span>';
       }).join('') + '</div>';
@@ -315,7 +335,7 @@
     var best = Infinity, cells = [];
     MODES.forEach(function (m) {
       COLS.forEach(function (c) {
-        var r = route(state.from, state.to, { base: m, train: !!c.t, air: !!c.a, boat: !!c.b, ship: !!c.b });
+        var r = routeTrip(tripIds(), { base: m, train: !!c.t, air: !!c.a, boat: !!c.b, ship: !!c.b });
         cells.push({ m: m, c: c, r: r });
         if (r && r.days < best - 1e-9) best = r.days;
       });
@@ -344,7 +364,7 @@
       L.polyline(ll, { color: '#000', weight: STYLE[s.type].weight + 3, opacity: 0.55, interactive: false }).addTo(layer);
       L.polyline(ll, L.extend({ interactive: false, lineCap: 'round' }, STYLE[s.type])).addTo(layer);
     });
-    [[state.from, '#3ddc84'], [state.to, '#ff5d5d']].forEach(function (p) {
+    ([[state.from, '#3ddc84'], [state.to, '#ff5d5d']].concat(state.stops.filter(Boolean).map(function (id) { return [id, '#ffd24a']; }))).forEach(function (p) {
       var m = api.entries[p[0]].data;
       L.circleMarker(api.toLatLng(m.x, m.y), { radius: 9, color: '#000', weight: 2, fillColor: p[1], fillOpacity: 1, interactive: false }).addTo(layer);
       all.push(api.toLatLng(m.x, m.y));
@@ -364,8 +384,7 @@
     update(fit !== false);
   }
 
-  function bindPicker(which) {
-    var input = $('rt-' + which), list = $('rt-' + which + '-list');
+  function bindPickerEl(input, list, wrap, onPick, onClear) {
     function render() {
       var q = input.value.trim();
       if (!q) { list.hidden = true; return; }
@@ -376,17 +395,49 @@
         return '<li data-id="' + esc(m.id) + '"><span>' + esc(c.icon) + '</span><span>' + esc(m.name) + '</span><small>' + esc(c.name) + '</small></li>';
       }).join('') : '<li class="empty">Nada encontrado</li>';
     }
-    input.addEventListener('input', function () { if (!input.value.trim()) { state[which] = null; update(false); } render(); });
+    input.addEventListener('input', function () { if (!input.value.trim()) onClear(); render(); });
     input.addEventListener('focus', function () { input.select(); });
     input.addEventListener('keydown', function (ev) {
-      if (ev.key === 'Enter') { var li = list.querySelector('li[data-id]'); if (li) { list.hidden = true; setPlace(which, li.dataset.id); } }
+      if (ev.key === 'Enter') { var li = list.querySelector('li[data-id]'); if (li) { list.hidden = true; onPick(li.dataset.id); } }
       else if (ev.key === 'Escape') list.hidden = true;
     });
     list.addEventListener('click', function (ev) {
       var li = ev.target.closest('li[data-id]'); if (!li) return;
-      list.hidden = true; setPlace(which, li.dataset.id);
+      list.hidden = true; onPick(li.dataset.id);
     });
-    document.addEventListener('click', function (ev) { if (!ev.target.closest('#rt-' + which + '-wrap')) list.hidden = true; });
+    document.addEventListener('click', function (ev) { if (!wrap.contains(ev.target)) list.hidden = true; });
+  }
+  function bindPicker(which) {
+    bindPickerEl($('rt-' + which), $('rt-' + which + '-list'), $('rt-' + which + '-wrap'),
+      function (id) { setPlace(which, id); }, function () { state[which] = null; update(false); });
+  }
+
+  /* ---------- paradas ---------- */
+  function renderStops(focusIdx) {
+    var box = $('rt-stops'); box.innerHTML = '';
+    state.stops.forEach(function (id, i) {
+      var wrap = document.createElement('div'); wrap.className = 'rt-field rt-stop';
+      wrap.innerHTML = '<input type="search" placeholder="Parada ' + (i + 1) + '" autocomplete="off" aria-label="Parada ' + (i + 1) + '">' +
+        '<div class="rt-stop-btns"><button class="link" data-s="up" title="Subir">▲</button><button class="link" data-s="down" title="Descer">▼</button><button class="link" data-s="del" title="Remover">✕</button></div>' +
+        '<ul class="rt-list" hidden></ul>';
+      var input = wrap.querySelector('input'), list = wrap.querySelector('ul');
+      if (id && api.entries[id]) input.value = api.entries[id].data.name;
+      bindPickerEl(input, list, wrap, function (pid) { state.stops[i] = pid; input.value = api.entries[pid].data.name; update(true); },
+        function () { state.stops[i] = null; update(false); });
+      wrap.querySelector('.rt-stop-btns').addEventListener('click', function (ev) {
+        var b = ev.target.closest('button[data-s]'); if (!b) return;
+        if (b.dataset.s === 'del') state.stops.splice(i, 1);
+        else { var k = b.dataset.s === 'up' ? i - 1 : i + 1; if (k < 0 || k >= state.stops.length) return; var tmp = state.stops[i]; state.stops[i] = state.stops[k]; state.stops[k] = tmp; }
+        renderStops(); update(true);
+      });
+      box.appendChild(wrap);
+      if (focusIdx === i) setTimeout(function () { input.focus(); }, 30);
+    });
+  }
+  function addStop(id) {
+    state.stops.push(id || null);
+    renderStops(id ? undefined : state.stops.length - 1);
+    if (id) update(true);
   }
 
   function syncControls() {
@@ -405,8 +456,12 @@
     $('rt-air').onchange = function () { state.air = this.checked; update(false); };
     $('rt-boat').onchange = function () { state.boat = this.checked; update(false); };
     $('rt-ship').onchange = function () { state.ship = this.checked; update(false); };
-    $('rt-swap').onclick = function () { var f = state.from, t = state.to; setPlace('from', t, false); setPlace('to', f, false); };
-    $('route-clear').onclick = function () { state.from = state.to = null; $('rt-from').value = ''; $('rt-to').value = ''; update(false); };
+    $('rt-swap').onclick = function () {
+      var f = state.from, t2 = state.to; state.stops.reverse(); renderStops();
+      setPlace('from', t2, false); setPlace('to', f, false);
+    };
+    $('rt-addstop').onclick = function () { addStop(null); };
+    $('route-clear').onclick = function () { state.from = state.to = null; state.stops = []; renderStops(); $('rt-from').value = ''; $('rt-to').value = ''; update(false); };
     $('rt-out').addEventListener('click', function (ev) {
       var ab = ev.target.closest('button[data-act]');
       if (ab) { doAction(ab.dataset.act); return; }
@@ -419,17 +474,22 @@
       var b = ev.target.closest('button[data-route]'); if (!b) return;
       api.map.closePopup();
       openPanel();
-      setPlace(b.dataset.route === 'from' ? 'from' : 'to', b.dataset.id, true);
+      if (b.dataset.route === 'stop') addStop(b.dataset.id);
+      else setPlace(b.dataset.route === 'from' ? 'from' : 'to', b.dataset.id, true);
     }, true);   // captura: o Leaflet interrompe a propagação de cliques dentro do popup
     $('rt-train-label').title = 'Ferroáurea: ferrovia branca tracejada em Picoáureo (' + cfgT.train.speedKmh + ' km/h)';
     $('rt-air-label').title = 'Aeronau: liga as capitais em linha reta (' + cfgT.aeronau.speedKmh + ' km/h)';
   }
 
   function legText(s) {
+    if (s.type === 'stop') return '📍 Parada: ' + s.at;
     if (s.type === 'wait') return '⏳ Espera para embarcar (' + WAIT_NAME[s.mode] + ') em ' + s.at + ' — ' + fmtDur(s.h);
     return LEG_ICON[s.type] + ' ' + LEG_NAME[s.type] + (s.type === 'river' ? (s.flow > 0 ? ' (descendo)' : s.flow < 0 ? ' (subindo)' : '') : '') +
       (s.from ? ': ' + s.from + ' → ' + (s.to || '') : '') + ' — ' + fmtKm(s.km) + ', ' + fmtDur(s.h) +
       (s.via.length ? ' (passando por ' + s.via.join(', ') + ')' : '');
+  }
+  function tripName() {
+    return tripIds().map(function (id) { return api.entries[id].data.name; }).join(' → ');
   }
   function modeLabel() {
     var ex = [];
@@ -438,8 +498,7 @@
     return cfgT.speeds[state.base].label + (ex.length ? ' + ' + ex.join(' + ') : '');
   }
   function routeText() {
-    var A = api.entries[state.from].data.name, B = api.entries[state.to].data.name;
-    return A + ' → ' + B + '\n' + modeLabel() + '\n' +
+    return tripName() + '\n' + modeLabel() + '\n' +
       fmtDays(last.days) + ' · ' + fmtKm(last.km) + ' · ' + fmtDur(last.hours) + ' em movimento' +
       (last.nights ? ' · ' + last.nights + ' pernoite(s)' : '') + '\n\n' +
       last.segs.map(function (s, i) { return (i + 1) + '. ' + legText(s); }).join('\n');
@@ -455,10 +514,10 @@
         function () { api.toast('Link da rota copiado!'); }, function () { api.toast('Copie o link na barra de endereço.'); });
     } else if (act === 'print') {
       var w = window.open('', '_blank'); if (!w) { api.toast('Pop-up bloqueado.'); return; }
-      var A = api.entries[state.from].data.name, B = api.entries[state.to].data.name;
-      w.document.write('<!doctype html><meta charset="utf-8"><title>' + esc(A) + ' → ' + esc(B) + '</title>' +
+      var A = tripName();
+      w.document.write('<!doctype html><meta charset="utf-8"><title>' + esc(A) + '</title>' +
         '<style>body{font:15px/1.5 system-ui,sans-serif;max-width:720px;margin:32px auto;padding:0 16px}h1{font-size:1.4rem;margin:0}small{color:#555}li{margin:6px 0}</style>' +
-        '<h1>' + esc(A) + ' → ' + esc(B) + '</h1><p><b>' + esc(modeLabel()) + '</b><br>' + esc(fmtDays(last.days)) + ' · ' + esc(fmtKm(last.km)) +
+        '<h1>' + esc(A) + '</h1><p><b>' + esc(modeLabel()) + '</b><br>' + esc(fmtDays(last.days)) + ' · ' + esc(fmtKm(last.km)) +
         ' · ' + esc(fmtDur(last.hours)) + ' em movimento' + (last.nights ? ' · ' + last.nights + ' pernoite(s)' : '') + '</p><ol>' +
         last.segs.map(function (s) { return '<li>' + esc(legText(s)) + '</li>'; }).join('') + '</ol><small>' + esc(api.cfg.title || '') + '</small>');
       w.document.close(); w.focus(); setTimeout(function () { w.print(); }, 250);
@@ -473,7 +532,7 @@
   /* ---------- hash ---------- */
   function extraHash() {
     if (!ready || !state.from || !state.to) return '';
-    return '&r=' + encodeURIComponent(state.from) + ',' + encodeURIComponent(state.to) + '&b=' + state.base +
+    return '&r=' + encodeURIComponent(state.from) + ',' + encodeURIComponent(state.to) + (state.stops.filter(Boolean).length ? '&v=' + state.stops.filter(Boolean).map(encodeURIComponent).join(',') : '') + '&b=' + state.base +
       (state.train ? '&t=1' : '') + (state.air ? '&a=1' : '') + ((state.boat ? 1 : 0) + (state.ship ? 2 : 0) ? '&w=' + ((state.boat ? 1 : 0) + (state.ship ? 2 : 0)) : '');
   }
   function readHash() {
@@ -490,6 +549,8 @@
     var hasView = isFinite(parseFloat(p.x));
     if (api.entries[ids[0]]) { state.from = ids[0]; $('rt-from').value = api.entries[ids[0]].data.name; }
     if (api.entries[ids[1]]) { state.to = ids[1]; $('rt-to').value = api.entries[ids[1]].data.name; }
+    state.stops = (p.v ? p.v.split(',') : []).filter(function (id) { return api.entries[id]; });
+    renderStops();
     update(!hasView);
   }
 
@@ -513,6 +574,7 @@
         if (panel) panel.hidden = true;
       });
     },
-    route: function (a, b, o) { return ready ? route(a, b, o) : null; }
+    route: function (a, b, o) { return ready ? route(a, b, o) : null; },
+    trip: function (ids, o) { return ready ? routeTrip(ids, o) : null; }
   };
 })();

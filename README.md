@@ -86,5 +86,5 @@ Todas as velocidades (km/h), limite de 12 h de deslocamento por dia a pé/cavalo
 - **Régua** (`M`): mede em linha reta e estima tempo a pé/cavalo/carroça.
 - **Meus pins**: botão direito (ou segurar no celular) no mapa; salvos no navegador, com exportar/importar JSON. (Ainda não entram no calculador de rotas.)
 - **Popup dos pins**: "Perto daqui", "Copiar link", "Sair daqui / Chegar aqui".
-- **Rotas**: copiar resumo, imprimir, link da rota e legenda das linhas.
+- **Rotas**: paradas intermediárias (ordenáveis; botão "➕ Parada" no pin), copiar resumo, imprimir, link da rota e legenda das linhas.
 - **Atalhos**: `/` buscar, `R` rotas, `M` régua, `Esc` fechar, `?` ajuda.
