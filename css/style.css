@@ -193,3 +193,5 @@ kbd{font:inherit;font-size:.72rem;border:1px solid #4a5563;border-bottom-width:2
 .rt-btnrow{display:flex;justify-content:space-between;margin:2px 0}
 .rt-legs .stop{color:#ffd24a;border-bottom-color:#ffd24a55}
 .popup-actions{flex-wrap:wrap}
+
+.rt-btnrow{flex-wrap:wrap;gap:4px 12px}

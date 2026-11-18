@@ -450,6 +450,38 @@
       if (focusIdx === i) setTimeout(function () { input.focus(); }, 30);
     });
   }
+  // Reordena as paradas para o menor tempo total (origem e destino ficam fixos). Força bruta até 8 paradas.
+  function optimizeStops() {
+    var ids = state.stops.filter(Boolean);
+    if (!state.from || !state.to) { api.toast('Defina origem e destino primeiro.'); return; }
+    if (ids.length < 2) { api.toast('Adicione ao menos 2 paradas para otimizar a ordem.'); return; }
+    if (ids.length > 8) { api.toast('Otimização disponível até 8 paradas.'); return; }
+    var o = opts(), pts = [state.from].concat(ids, [state.to]), n = pts.length, M = [];
+    for (var i = 0; i < n; i++) {
+      M[i] = [];
+      for (var j = 0; j < n; j++) {
+        if (i === j || pts[i] === pts[j]) { M[i][j] = 0; continue; }
+        var r = route(pts[i], pts[j], o); M[i][j] = r ? r.hours : Infinity;
+      }
+    }
+    var best = Infinity, bestOrder = null, k = n - 2, used = [], order = [];
+    function walk(prev, cost) {
+      if (cost >= best) return;
+      if (order.length === k) {
+        var tot = cost + M[prev][n - 1];
+        if (tot < best) { best = tot; bestOrder = order.slice(); }
+        return;
+      }
+      for (var c = 1; c <= k; c++) {
+        if (used[c]) continue;
+        used[c] = true; order.push(c); walk(c, cost + M[prev][c]); order.pop(); used[c] = false;
+      }
+    }
+    walk(0, 0);
+    if (!bestOrder) { api.toast('Não há caminho entre todas as paradas com as opções atuais.'); return; }
+    state.stops = bestOrder.map(function (c) { return pts[c]; });
+    renderStops(); update(true); api.toast('Ordem das paradas otimizada.');
+  }
   function addStop(id) {
     state.stops.push(id || null);
     renderStops(id ? undefined : state.stops.length - 1);
@@ -477,6 +509,7 @@
       setPlace('from', t2, false); setPlace('to', f, false);
     };
     $('rt-addstop').onclick = function () { addStop(null); };
+    $('rt-optimize').onclick = optimizeStops;
     $('route-clear').onclick = function () { state.from = state.to = null; state.stops = []; renderStops(); $('rt-from').value = ''; $('rt-to').value = ''; update(false); };
     $('rt-out').addEventListener('click', function (ev) {
       var ab = ev.target.closest('button[data-act]');
