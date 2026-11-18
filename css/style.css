@@ -97,3 +97,32 @@ body:not(.sidebar-closed) .leaflet-top.leaflet-left .leaflet-control-zoom{margin
   #map{left:0}
   body:not(.sidebar-closed) #sidebar{box-shadow:0 0 30px #000}
 }
+
+/* ===== rotas ===== */
+#route-panel{border-top:1px solid #2d3641;border-bottom:1px solid #2d3641}
+.rt-field{position:relative;margin:4px 0}
+.rt-field input{width:100%;padding:8px 10px;border-radius:var(--radius);border:1px solid #333c47;background:var(--panel-2);color:var(--text)}
+.rt-list{list-style:none;margin:2px 0 0;padding:0;position:absolute;left:0;right:0;z-index:5;max-height:30vh;overflow-y:auto;background:var(--panel-2);border-radius:var(--radius);box-shadow:0 6px 18px #000a}
+.rt-list li{padding:7px 10px;cursor:pointer;display:flex;gap:8px;align-items:center}
+.rt-list li:hover{background:#2d3641}.rt-list small{margin-left:auto;color:var(--muted);font-size:.72rem}
+.rt-swap{display:block;margin:0 0 0 auto}
+.rt-opts{display:flex;flex-wrap:wrap;gap:6px 14px;margin:8px 0;font-size:.88rem}
+.rt-opts label{cursor:pointer;user-select:none}.rt-opts input{accent-color:var(--accent)}
+.rt-hint{color:var(--muted);font-size:.82rem;margin:6px 0}
+.rt-warn{color:#ff9b8a;font-size:.85rem}
+.rt-summary{background:var(--panel-2);border-radius:var(--radius);padding:8px 10px;margin:6px 0}
+.rt-summary span{color:var(--muted);font-size:.82rem}
+.rt-legs{margin:6px 0;padding-left:0;list-style:none;font-size:.85rem}
+.rt-legs li{padding:5px 0;border-bottom:1px solid #2d3641;line-height:1.35}
+.rt-legs small{color:var(--muted)}.rt-legs .wait{color:var(--muted)}
+.rt-table{width:100%;border-collapse:collapse;font-size:.74rem;margin-top:8px;table-layout:fixed}
+.rt-table th{font-weight:600;color:var(--muted);padding:3px 2px;text-align:center}
+.rt-table tbody th{text-align:left;white-space:nowrap}
+.rt-table button{width:100%;padding:5px 1px;border-radius:6px;border:1px solid #333c47;background:var(--panel-2);font-size:.74rem}
+.rt-table button.sel{border-color:var(--accent);background:#3a3320}
+.rt-table button.best{color:var(--accent);font-weight:700}
+.rt-table button:disabled{opacity:.4;cursor:default}
+.rt-note{display:block;color:var(--muted);margin-top:6px;line-height:1.35}
+.popup-actions{display:flex;gap:6px;margin-top:8px}
+.popup-actions button{flex:1;padding:5px 6px;border-radius:6px;border:1px solid #888;background:#fff;color:#222;font-size:.78rem;cursor:pointer}
+.popup-actions button:hover{border-color:#b8860b}

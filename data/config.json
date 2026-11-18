@@ -121,5 +121,49 @@
       "namesZoom": 2,
       "visible": true
     }
-  ]
+  ],
+  "travel": {
+    "kmPerPx": 0.4795,
+    "speeds": {
+      "foot": {
+        "label": "A pé",
+        "icon": "🥾",
+        "road": 4.5,
+        "trail": 3.5,
+        "off": 2.5
+      },
+      "horse": {
+        "label": "A cavalo",
+        "icon": "🐎",
+        "road": 10,
+        "trail": 7,
+        "off": 4
+      },
+      "cart": {
+        "label": "Carroça",
+        "icon": "🛒",
+        "road": 5,
+        "trail": 2.5,
+        "off": 1.5
+      }
+    },
+    "hoursPerDay": {
+      "foot": 8,
+      "horse": 10,
+      "cart": 10
+    },
+    "train": {
+      "name": "Ferroáurea",
+      "speedKmh": 50,
+      "waitHours": 1
+    },
+    "aeronau": {
+      "name": "Aeronau",
+      "speedKmh": 40,
+      "waitHours": 2,
+      "stations": "capitals"
+    },
+    "offroadMaxKm": 250,
+    "offroadDetour": 1.3
+  }
 }

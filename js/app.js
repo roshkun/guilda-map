@@ -7,6 +7,7 @@
   var HIDDEN_KEY = 'meumapa.hiddenMarkers';
   var CATS_KEY = 'meumapa.hiddenCats';
 
+  var api = window.GuildaMap = {};
   var cfg, markers, catById = {}, map, H, W;
   var entries = {};            // id -> { data, cat, layer, area }
   var catGroups = {};          // catId -> { pins: L.LayerGroup, areas: L.LayerGroup }
@@ -107,6 +108,9 @@
     map.on('zoomend', refresh);
     map.on('moveend zoomend', writeHash);
     if (editMode) enableEditMode();
+    api.cfg = cfg; api.map = map; api.entries = entries; api.markers = markers; api.catById = catById;
+    api.toLatLng = toLatLng; api.esc = esc; api.search = search; api.writeHash = writeHash; api.toast = toast;
+    if (window.GuildaTravel) GuildaTravel.init(api);
     window.addEventListener('hashchange', function () { applyHash(false); });
   }
 
@@ -160,6 +164,7 @@
       '<h3>' + esc(m.name) + '</h3>' + img +
       (m.description ? '<p>' + esc(m.description) + '</p>' : '') +
       (docs ? '<ul>' + docs + '</ul>' : '') +
+      (cfg.travel ? '<div class="popup-actions"><button data-route="from" data-id="' + esc(m.id) + '">🧭 Sair daqui</button><button data-route="to" data-id="' + esc(m.id) + '">🏁 Chegar aqui</button></div>' : '') +
       (editMode ? '<div class="coords">x: ' + m.x + ', y: ' + m.y + '</div>' : '') + '</div>';
   }
 
@@ -310,7 +315,8 @@
     var run = function () {
       var c = map.getCenter();
       var h = '#x=' + Math.round(c.lng) + '&y=' + Math.round(-c.lat) + '&z=' + map.getZoom() +
-              (currentMarker ? '&m=' + encodeURIComponent(currentMarker) : '');
+              (currentMarker ? '&m=' + encodeURIComponent(currentMarker) : '') +
+              (api.extraHash ? api.extraHash() : '');
       history.replaceState(null, '', location.pathname + location.search + h);
     };
     if (now === true) run(); else hashTimer = setTimeout(run, 250);

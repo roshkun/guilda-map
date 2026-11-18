@@ -1,0 +1,6 @@
+{
+  "_comentario": "Ligações manuais entre pontos [x, y] (pixels) que a extração automática não consegue unir (travessias de água, pontes escondidas sob ícones etc.). kind: 0 = estrada, 1 = trilha.",
+  "links": [
+    { "nome": "Travessia do estreito (trilha do deserto oeste)", "a": [1308, 2983], "b": [1608, 3000], "kind": 1 }
+  ]
+}

@@ -1,3 +1,4 @@
 source/
 *.psd
 *.xcf
+__pycache__/

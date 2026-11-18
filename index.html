@@ -22,6 +22,28 @@
       <ul id="results" hidden></ul>
     </div>
 
+    <section id="route-panel">
+      <div class="section-head">
+        <h2>Rotas e viagens</h2>
+        <button id="route-clear" class="link" hidden>limpar</button>
+      </div>
+      <div class="rt-field" id="rt-from-wrap">
+        <input id="rt-from" type="search" placeholder="Origem" autocomplete="off">
+        <ul id="rt-from-list" class="rt-list" hidden></ul>
+      </div>
+      <button id="rt-swap" class="link rt-swap" title="Inverter">⇅ inverter</button>
+      <div class="rt-field" id="rt-to-wrap">
+        <input id="rt-to" type="search" placeholder="Destino" autocomplete="off">
+        <ul id="rt-to-list" class="rt-list" hidden></ul>
+      </div>
+      <div id="rt-modes" class="rt-opts"></div>
+      <div class="rt-opts">
+        <label id="rt-train-label"><input type="checkbox" id="rt-train"> 🚂 Ferroáurea</label>
+        <label id="rt-air-label"><input type="checkbox" id="rt-air"> 🎈 Aeronau</label>
+      </div>
+      <div id="rt-out"></div>
+    </section>
+
     <section>
       <div class="section-head">
         <h2>Camadas</h2>
@@ -43,6 +65,7 @@
   <div id="toast" hidden></div>
 
   <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+  <script src="js/travel.js"></script>
   <script src="js/app.js"></script>
 </body>
 </html>
