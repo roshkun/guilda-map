@@ -78,3 +78,13 @@ Parâmetros de porto/faixa costeira estão no topo de `tools/build_water.py`; o 
 ### Velocidades e regras (`data/config.json` → `travel`)
 
 Todas as velocidades (km/h), limite de 12 h de deslocamento por dia a pé/cavalo/carroça (o resto é descanso), esperas de embarque, horas de caminhada por dia, estações do Aeronau (`"capitals"` ou lista de ids) e correnteza dos rios são **valores provisórios** — ajuste à vontade. Escala: 0,4795 km/px (barra do mapa).
+
+## Interface
+
+- **Abas** na barra lateral: Explorar (camadas), Rotas e Ferramentas.
+- **Escala em km** no canto inferior direito; botões no mapa para régua, novo pin e ajuda.
+- **Régua** (`M`): mede em linha reta e estima tempo a pé/cavalo/carroça.
+- **Meus pins**: botão direito (ou segurar no celular) no mapa; salvos no navegador, com exportar/importar JSON. (Ainda não entram no calculador de rotas.)
+- **Popup dos pins**: "Perto daqui", "Copiar link", "Sair daqui / Chegar aqui".
+- **Rotas**: copiar resumo, imprimir, link da rota e legenda das linhas.
+- **Atalhos**: `/` buscar, `R` rotas, `M` régua, `Esc` fechar, `?` ajuda.

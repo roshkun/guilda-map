@@ -52,6 +52,7 @@
     init();
   }).catch(function (err) {
     console.error(err);
+    var ld0 = document.getElementById('loading'); if (ld0) ld0.hidden = true;
     document.body.insertAdjacentHTML('beforeend',
       '<p style="position:fixed;inset:40% 10% auto;z-index:3000;background:#400;padding:16px;border-radius:8px">' +
       'Não consegui carregar os dados. Abra o projeto por um servidor local ' +
@@ -109,8 +110,10 @@
     map.on('moveend zoomend', writeHash);
     if (editMode) enableEditMode();
     api.cfg = cfg; api.map = map; api.entries = entries; api.markers = markers; api.catById = catById;
-    api.toLatLng = toLatLng; api.esc = esc; api.search = search; api.writeHash = writeHash; api.toast = toast;
+    api.toLatLng = toLatLng; api.esc = esc; api.search = search; api.writeHash = writeHash; api.toast = toast; api.focusMarker = focusMarker;
+    if (window.GuildaTools) GuildaTools.init(api);
     if (window.GuildaTravel) GuildaTravel.init(api);
+    var ld = $('loading'); if (ld) ld.hidden = true;
     window.addEventListener('hashchange', function () { applyHash(false); });
   }
 
@@ -165,7 +168,23 @@
       (m.description ? '<p>' + esc(m.description) + '</p>' : '') +
       (docs ? '<ul>' + docs + '</ul>' : '') +
       (cfg.travel ? '<div class="popup-actions"><button data-route="from" data-id="' + esc(m.id) + '">🧭 Sair daqui</button><button data-route="to" data-id="' + esc(m.id) + '">🏁 Chegar aqui</button></div>' : '') +
+      '<div class="popup-actions sec"><button data-copylink="' + esc(m.id) + '">🔗 Copiar link</button></div>' + nearbyHtml(m) +
       (editMode ? '<div class="coords">x: ' + m.x + ', y: ' + m.y + '</div>' : '') + '</div>';
+  }
+
+  function nearbyHtml(m) {
+    var km = cfg.travel && cfg.travel.kmPerPx, arr = [];
+    Object.keys(entries).forEach(function (id) {
+      var o = entries[id].data;
+      if (id === m.id || o.category === 'country' || o.category === 'duchy') return;
+      arr.push([Math.hypot(o.x - m.x, o.y - m.y), o]);
+    });
+    arr.sort(function (a, b) { return a[0] - b[0]; });
+    if (!arr.length) return '';
+    return '<div class="nearby"><b>Perto daqui</b><ul>' + arr.slice(0, 4).map(function (p) {
+      var d = km ? Math.round(p[0] * km) + ' km' : Math.round(p[0]) + ' px';
+      return '<li><a href="#" data-focus="' + esc(p[1].id) + '">' + esc(catById[p[1].category].icon) + ' ' + esc(p[1].name) + '</a> <small>' + d + '</small></li>';
+    }).join('') + '</ul></div>';
   }
 
   function hideMarker(id) {

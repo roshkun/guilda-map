@@ -8,7 +8,7 @@
 
   var api, cfgT, net, water, kmPx;
   var adj = [], nodeMarkers = {}, hubOf = {}, hubName = {}, gN = 0;
-  var layer = null, ready = false;
+  var layer = null, ready = false, last = null;
   var state = { from: null, to: null, base: 'foot', train: false, air: false, boat: false, ship: false };
   var MODES = ['foot', 'horse', 'cart'];
   var COLS = [{ t: 0, a: 0, b: 0, label: 'Só terra' }, { t: 1, a: 0, b: 0, label: '+ Ferro-áurea' },
@@ -299,6 +299,14 @@
           (s.via.length ? ' · passando por ' + s.via.map(esc).join(', ') : '') + '</small></li>';
       }).join('') + '</ol>';
     }
+    if (r) {
+      last = r;
+      var used = {}; r.segs.forEach(function (s) { if (s.type !== 'wait') used[s.type] = 1; });
+      html += '<div class="rt-legend">' + Object.keys(used).map(function (k) {
+        return '<span><i style="background:' + STYLE[k].color + '"></i>' + LEG_NAME[k] + '</span>';
+      }).join('') + '</div>';
+      html += '<div class="rt-actions"><button data-act="copy">📋 Copiar resumo</button><button data-act="print">🖨️ Imprimir</button><button data-act="link">🔗 Link da rota</button></div>';
+    }
     html += compareTable();
     out.innerHTML = html;
   }
@@ -342,7 +350,6 @@
       all.push(api.toLatLng(m.x, m.y));
     });
     if (fit && all.length) {
-      var pad = window.innerWidth > 720 ? [[40, 40], [40, 40]] : [[30, 30], [30, 30]];
       api.map.fitBounds(L.latLngBounds(all), {
         paddingTopLeft: [(window.innerWidth > 720 ? 350 : 30), 40], paddingBottomRight: [40, 40], maxZoom: 4, animate: true
       });
@@ -401,6 +408,8 @@
     $('rt-swap').onclick = function () { var f = state.from, t = state.to; setPlace('from', t, false); setPlace('to', f, false); };
     $('route-clear').onclick = function () { state.from = state.to = null; $('rt-from').value = ''; $('rt-to').value = ''; update(false); };
     $('rt-out').addEventListener('click', function (ev) {
+      var ab = ev.target.closest('button[data-act]');
+      if (ab) { doAction(ab.dataset.act); return; }
       var b = ev.target.closest('button[data-m]'); if (!b || b.disabled) return;
       state.base = b.dataset.m; state.train = b.dataset.t === '1'; state.air = b.dataset.a === '1'; state.boat = state.ship = b.dataset.b === '1';
       syncControls(); update(true);
@@ -416,9 +425,49 @@
     $('rt-air-label').title = 'Aeronau: liga as capitais em linha reta (' + cfgT.aeronau.speedKmh + ' km/h)';
   }
 
+  function legText(s) {
+    if (s.type === 'wait') return '⏳ Espera para embarcar (' + WAIT_NAME[s.mode] + ') em ' + s.at + ' — ' + fmtDur(s.h);
+    return LEG_ICON[s.type] + ' ' + LEG_NAME[s.type] + (s.type === 'river' ? (s.flow > 0 ? ' (descendo)' : s.flow < 0 ? ' (subindo)' : '') : '') +
+      (s.from ? ': ' + s.from + ' → ' + (s.to || '') : '') + ' — ' + fmtKm(s.km) + ', ' + fmtDur(s.h) +
+      (s.via.length ? ' (passando por ' + s.via.join(', ') + ')' : '');
+  }
+  function modeLabel() {
+    var ex = [];
+    if (state.train) ex.push('Ferroáurea'); if (state.air) ex.push('Aeronau');
+    if (state.boat) ex.push('barco pequeno'); if (state.ship) ex.push('navio grande');
+    return cfgT.speeds[state.base].label + (ex.length ? ' + ' + ex.join(' + ') : '');
+  }
+  function routeText() {
+    var A = api.entries[state.from].data.name, B = api.entries[state.to].data.name;
+    return A + ' → ' + B + '\n' + modeLabel() + '\n' +
+      fmtDays(last.days) + ' · ' + fmtKm(last.km) + ' · ' + fmtDur(last.hours) + ' em movimento' +
+      (last.nights ? ' · ' + last.nights + ' pernoite(s)' : '') + '\n\n' +
+      last.segs.map(function (s, i) { return (i + 1) + '. ' + legText(s); }).join('\n');
+  }
+  function doAction(act) {
+    if (!last || !state.from || !state.to) return;
+    if (act === 'copy') {
+      (navigator.clipboard && navigator.clipboard.writeText ? navigator.clipboard.writeText(routeText()) : Promise.reject()).then(
+        function () { api.toast('Resumo copiado!'); }, function () { api.toast('Não foi possível copiar.'); });
+    } else if (act === 'link') {
+      api.writeHash(true);
+      (navigator.clipboard && navigator.clipboard.writeText ? navigator.clipboard.writeText(location.href) : Promise.reject()).then(
+        function () { api.toast('Link da rota copiado!'); }, function () { api.toast('Copie o link na barra de endereço.'); });
+    } else if (act === 'print') {
+      var w = window.open('', '_blank'); if (!w) { api.toast('Pop-up bloqueado.'); return; }
+      var A = api.entries[state.from].data.name, B = api.entries[state.to].data.name;
+      w.document.write('<!doctype html><meta charset="utf-8"><title>' + esc(A) + ' → ' + esc(B) + '</title>' +
+        '<style>body{font:15px/1.5 system-ui,sans-serif;max-width:720px;margin:32px auto;padding:0 16px}h1{font-size:1.4rem;margin:0}small{color:#555}li{margin:6px 0}</style>' +
+        '<h1>' + esc(A) + ' → ' + esc(B) + '</h1><p><b>' + esc(modeLabel()) + '</b><br>' + esc(fmtDays(last.days)) + ' · ' + esc(fmtKm(last.km)) +
+        ' · ' + esc(fmtDur(last.hours)) + ' em movimento' + (last.nights ? ' · ' + last.nights + ' pernoite(s)' : '') + '</p><ol>' +
+        last.segs.map(function (s) { return '<li>' + esc(legText(s)) + '</li>'; }).join('') + '</ol><small>' + esc(api.cfg.title || '') + '</small>');
+      w.document.close(); w.focus(); setTimeout(function () { w.print(); }, 250);
+    }
+  }
+
   function openPanel() {
     document.body.classList.remove('sidebar-closed');
-    var p = $('route-panel'); if (p && p.scrollIntoView) p.scrollIntoView({ block: 'nearest' });
+    if (api.showTab) api.showTab('routes');
   }
 
   /* ---------- hash ---------- */
